@@ -24,12 +24,16 @@ func init() {
 	flag.BoolVar(&clear, "clear", false, "clear all timers")
 }
 
-func main() {
-	// parse command line parameters
-	flag.Parse()
+// TODO: -C"..."  execute the command-line and display the execution time
+// TODO: -list option, to list all timers
 
-	// configure logging
+func main() {
+	flag.Parse()
 	log.SetFlags(0)
+
+	if flag.NFlag() == 0 {
+		flag.Usage()
+	}
 
 	if clear {
 		clearAllTimers()
@@ -53,7 +57,7 @@ func printElapsed(timer string) {
 	t0 := time.Unix(0, int64(getNanos(timer)))
 	t1 := time.Now()
 	duration := t1.Sub(t0)
-	fmt.Println("Time elapsed:", duration.String())
+	fmt.Printf("Elapsed time (%s): %s\n", timer, duration.String())
 }
 
 func getNanos(timer string) uint64 {
