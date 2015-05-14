@@ -18,9 +18,9 @@ const (
 )
 
 func init() {
-	flag.StringVar(&start, "start", "", "start timer")
-	flag.StringVar(&stop, "stop", "", "stop timer")
-	flag.StringVar(&elapsed, "elapsed", "", "print elapsed time for timer (do not stop)")
+	flag.StringVar(&start, "start", "REQUIRED", "start timer")
+	flag.StringVar(&stop, "stop", "REQUIRED", "stop timer and print elapsed time")
+	flag.StringVar(&elapsed, "elapsed", "REQUIRED", "print elapsed time for timer")
 	flag.BoolVar(&clear, "clear", false, "clear all timers")
 }
 
@@ -32,32 +32,34 @@ func main() {
 	log.SetFlags(0)
 
 	if clear {
-		clearTimers()
+		clearAllTimers()
 	}
 
-	// TODO: check flags, key is mandatory for start and stop
-	if start != "" {
+	if start != "REQUIRED" {
 		setNanos(start)
 	}
 
-	if stop != "" {
-		// get nanos and print result
-		// clear timer
-
-		// fmt.Println(getNanos("key1"))
-		// fmt.Println(getNanos("key2"))
+	if stop != "REQUIRED" {
+		printElapsed(stop)
+		clearTimer(stop)
 	}
 
-	if elapsed != "" {
-		// get nanos and print result
-		// no NOT clear timer
+	if elapsed != "REQUIRED" {
+		printElapsed(elapsed)
 	}
+}
+
+func printElapsed(timer string) {
+	t0 := time.Unix(0, int64(getNanos(timer)))
+	t1 := time.Now()
+	duration := t1.Sub(t0)
+	fmt.Println("Time elapsed:", duration.String())
 }
 
 func getNanos(timer string) uint64 {
 	nanos, err := registryGetQword(path + "\\" + subkey, timer)
 	if (err != nil) {
-		log.Fatalf("The timer %q has not been started, try `timer -start <key>`", timer)
+		log.Fatalf("The timer %q has not been started.", timer)
 	}
 	return nanos
 }
@@ -76,9 +78,13 @@ func createTimerGroup() {
 	}
 }
 
-func clearTimers() {
+func clearTimer(timer string) {
+	registryDeleteValue(path + "\\" + subkey, timer)
+}
+
+func clearAllTimers() {
 	deleteTimerGroup()
-	fmt.Println("Timers deleted.")
+	fmt.Println("All timers deleted")
 }
 
 func deleteTimerGroup() {

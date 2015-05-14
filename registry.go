@@ -6,17 +6,17 @@ import (
 	"unsafe"
 )
 
-func registrySetQword(path string, key string, value uint64) error {
+func registrySetQword(path string, valueName string, value uint64) error {
 	var handle syscall.Handle
 	err := syscall.RegOpenKeyEx(syscall.HKEY_CURRENT_USER, syscall.StringToUTF16Ptr(path), 0, syscall.KEY_SET_VALUE, &handle)
 	if err != nil {
 		return err
 	}
 	defer syscall.RegCloseKey(handle)
-	return regSetValueEx(handle, syscall.StringToUTF16Ptr(key), 0, syscall.REG_QWORD, (*byte)(unsafe.Pointer(&value)), 8)
+	return regSetValueEx(handle, syscall.StringToUTF16Ptr(valueName), 0, syscall.REG_QWORD, (*byte)(unsafe.Pointer(&value)), 8)
 }
 
-func registryGetQword(path string, key string) (uint64, error) {
+func registryGetQword(path string, valueName string) (uint64, error) {
 	var handle syscall.Handle
 	err := syscall.RegOpenKeyEx(syscall.HKEY_CURRENT_USER, syscall.StringToUTF16Ptr(path), 0, syscall.KEY_READ, &handle)
 	if err != nil {
@@ -24,25 +24,35 @@ func registryGetQword(path string, key string) (uint64, error) {
 	}
 	defer syscall.RegCloseKey(handle)
 
-	var val uint64
+	var value uint64
 	n := uint32(8)
-	var typ uint32
+	var vtype uint32
 
 	err = syscall.RegQueryValueEx(
-		handle, syscall.StringToUTF16Ptr(key),
+		handle, syscall.StringToUTF16Ptr(valueName),
 		nil,
-		&typ,
-		(*byte)(unsafe.Pointer(&val)),
+		&vtype,
+		(*byte)(unsafe.Pointer(&value)),
 		&n)
 
 	if err != nil {
 		return 0, err
 	}
 
-	if typ != syscall.REG_QWORD {
-		log.Fatalln("Expected key of type REG_QWORD, but was", valueTypeName[typ])
+	if vtype != syscall.REG_QWORD {
+		log.Fatalln("Expected key of type REG_QWORD, but was", valueTypeName[vtype])
 	}
-	return val, nil
+	return value, nil
+}
+
+func registryDeleteValue(path string, valueName string) error {
+	var handle syscall.Handle
+	err := syscall.RegOpenKeyEx(syscall.HKEY_CURRENT_USER, syscall.StringToUTF16Ptr(path), 0, syscall.KEY_WRITE, &handle)
+	if err != nil {
+		return err
+	}
+	defer syscall.RegCloseKey(handle)
+	return regDeleteValue(handle, syscall.StringToUTF16Ptr(valueName))
 }
 
 func registryCreateKey(path string) error {
