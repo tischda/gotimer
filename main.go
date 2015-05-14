@@ -67,20 +67,17 @@ func setNanos(timer string) {
 	// TODO: set value
 }
 
+// If "path" does not exist, it will be created
+func createTimerGroup() {
+	err := registryCreateKey(path + "\\" + subkey)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func clearTimers() {
 	deleteTimerGroup()
 	fmt.Println("Timers deleted.")
-}
-
-func createTimerGroup() {
-	err := registryCreateKey(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = registryCreateKey(path + "\\" + subkey)
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func deleteTimerGroup() {
