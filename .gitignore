@@ -13,8 +13,10 @@ Thumbs.db
 bin
 build
 target
+out
 logs
 .log
+.exe
 
 # ----------- workspaces
 

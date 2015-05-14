@@ -3,57 +3,89 @@ package main
 import (
 	"fmt"
 	"log"
-	"syscall"
-	"unsafe"
+	"flag"
 )
 
-const path = `SOFTWARE\Tischer\timers`
+var start string
+var stop string
+var elapsed string
+var clear bool
+
+const (
+	path = `SOFTWARE\Tischer`
+	subkey = `timers`
+)
+
+func init() {
+	flag.StringVar(&start, "start", "", "start timer")
+	flag.StringVar(&stop, "stop", "", "stop timer")
+	flag.StringVar(&elapsed, "elapsed", "", "print elapsed time for timer (do not stop)")
+	flag.BoolVar(&clear, "clear", false, "clear all timers")
+}
 
 func main() {
-	fmt.Println(getNanos("key1"))
+	// parse command line parameters
+	flag.Parse()
+
+	// configure logging
+	log.SetFlags(0)
+
+	if clear {
+		clearTimers()
+	}
+
+	// TODO: check flags, key is mandatory for start and stop
+	if start != "" {
+		setNanos(start)
+	}
+
+	if stop != "" {
+		// get nanos and print result
+		// clear timer
+
+		// fmt.Println(getNanos("key1"))
+		// fmt.Println(getNanos("key2"))
+	}
+
+	if elapsed != "" {
+		// get nanos and print result
+		// no NOT clear timer
+	}
 }
 
-// cf. ztypes_windows.go and https://msdn.microsoft.com/en-us/library/windows/desktop/ms724884(v=vs.85).aspx
-var valueTypeName = []string{
-    syscall.REG_NONE:                       "REG_NONE",
-    syscall.REG_SZ:                         "REG_SZ",
-    syscall.REG_EXPAND_SZ:                  "REG_EXPAND_SZ",
-    syscall.REG_BINARY:                     "REG_BINARY",
-    syscall.REG_DWORD_LITTLE_ENDIAN:        "REG_DWORD_LITTLE_ENDIAN",
-    syscall.REG_DWORD_BIG_ENDIAN:           "REG_DWORD_BIG_ENDIAN",
-    syscall.REG_LINK:                       "REG_LINK",
-    syscall.REG_MULTI_SZ:                   "REG_MULTI_SZ",
-    syscall.REG_RESOURCE_LIST:              "REG_RESOURCE_LIST",
-    syscall.REG_FULL_RESOURCE_DESCRIPTOR:   "REG_FULL_RESOURCE_DESCRIPTOR",
-    syscall.REG_RESOURCE_REQUIREMENTS_LIST: "REG_RESOURCE_REQUIREMENTS_LIST",
-    syscall.REG_QWORD_LITTLE_ENDIAN:        "REG_QWORD_LITTLE_ENDIAN",
+func getNanos(timer string) uint64 {
+	nanos, err := registryGetQword(path + "\\" + subkey, timer)
+	if (err != nil) {
+		log.Fatalf("The timer %q has not been started, try `timer -start <key>`", timer)
+	}
+	return nanos
 }
 
-func getNanos(key string) uint64 {
-	var handle syscall.Handle
-	err := syscall.RegOpenKeyEx(syscall.HKEY_CURRENT_USER, syscall.StringToUTF16Ptr(path), 0, syscall.KEY_READ, &handle)
+func setNanos(timer string) {
+	createTimerGroup()
+	log.Println("Starting timer", timer)
+	// TODO: set value
+}
+
+func clearTimers() {
+	deleteTimerGroup()
+	fmt.Println("Timers deleted.")
+}
+
+func createTimerGroup() {
+	err := registryCreateKey(path)
 	if err != nil {
-		log.Fatalf("Cannot open path %q: %s", path, err)
+		log.Fatal(err)
 	}
-	defer syscall.RegCloseKey(handle)
-
-	var val uint64
-	n := uint32(8)
-	var typ uint32
-
-	err = syscall.RegQueryValueEx(
-		handle, syscall.StringToUTF16Ptr(key),
-		nil,
-		&typ,
-		(*byte)(unsafe.Pointer(&val)),
-		&n)
-
+	err = registryCreateKey(path + "\\" + subkey)
 	if err != nil {
-        log.Fatalf("Cannot read key %q: %s", key, err)
+		log.Fatal(err)
 	}
+}
 
-	if typ != syscall.REG_QWORD {
-		log.Fatalln("Expected key of type REG_QWORD, but was", valueTypeName[typ])
+func deleteTimerGroup() {
+	err := registryDeleteKey(path, subkey)
+	if (err != nil) {
+		log.Fatal(err)
 	}
-	return val
 }
