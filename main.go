@@ -1,9 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"flag"
 	"time"
 )
 
@@ -13,7 +13,7 @@ var elapsed string
 var clear bool
 
 const (
-	path = `SOFTWARE\Tischer`
+	path   = `SOFTWARE\Tischer`
 	subkey = `timers`
 )
 
@@ -61,8 +61,8 @@ func printElapsed(timer string) {
 }
 
 func getNanos(timer string) uint64 {
-	nanos, err := registryGetQword(path + "\\" + subkey, timer)
-	if (err != nil) {
+	nanos, err := registryGetQword(path+"\\"+subkey, timer)
+	if err != nil {
 		log.Fatalf("The timer %q has not been started", timer)
 	}
 	return nanos
@@ -71,11 +71,11 @@ func getNanos(timer string) uint64 {
 func setNanos(timer string) {
 	createTimersRegistryKey()
 	log.Println("Starting timer", timer)
-	registrySetQword(path + "\\" + subkey, timer, uint64(time.Now().UnixNano()))
+	registrySetQword(path+"\\"+subkey, timer, uint64(time.Now().UnixNano()))
 }
 
 func clearTimer(timer string) {
-	registryDeleteValue(path + "\\" + subkey, timer)
+	registryDeleteValue(path+"\\"+subkey, timer)
 }
 
 func clearAllTimers() {
@@ -93,7 +93,7 @@ func createTimersRegistryKey() {
 
 func deleteTimersRegistryKey() {
 	err := registryDeleteKey(path, subkey)
-	if (err != nil) {
+	if err != nil {
 		log.Fatal(err)
 	}
 }

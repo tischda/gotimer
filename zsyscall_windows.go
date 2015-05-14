@@ -21,7 +21,7 @@ var valueTypeName = []string{
 	syscall.REG_QWORD_LITTLE_ENDIAN:        "REG_QWORD_LITTLE_ENDIAN",
 }
 
-// Adapted from https://github.com/golang/sys/blob/master/windows/registry/
+// Inspired from https://github.com/golang/sys/blob/master/windows/registry/
 
 var (
 	modadvapi32 = syscall.NewLazyDLL("advapi32.dll")
