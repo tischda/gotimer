@@ -43,13 +43,13 @@ func main() {
 		setNanos(start)
 	}
 
+	if elapsed != "REQUIRED" {
+		printElapsed(elapsed)
+	}
+
 	if stop != "REQUIRED" {
 		printElapsed(stop)
 		clearTimer(stop)
-	}
-
-	if elapsed != "REQUIRED" {
-		printElapsed(elapsed)
 	}
 }
 

@@ -15,8 +15,8 @@ build
 target
 out
 logs
-.log
-.exe
+*.log
+*.exe
 
 # ----------- workspaces
 
