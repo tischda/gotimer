@@ -1,10 +1,20 @@
 package main
 
 import (
+	"log"
 	"syscall"
 	"unsafe"
-	"log"
 )
+
+func registrySetQword(path string, key string, value uint64) error {
+	var handle syscall.Handle
+	err := syscall.RegOpenKeyEx(syscall.HKEY_CURRENT_USER, syscall.StringToUTF16Ptr(path), 0, syscall.KEY_SET_VALUE, &handle)
+	if err != nil {
+		return err
+	}
+	defer syscall.RegCloseKey(handle)
+	return regSetValueEx(handle, syscall.StringToUTF16Ptr(key), 0, syscall.REG_QWORD, (*byte)(unsafe.Pointer(&value)), 8)
+}
 
 func registryGetQword(path string, key string) (uint64, error) {
 	var handle syscall.Handle
@@ -50,7 +60,7 @@ func registryCreateKey(path string) error {
 
 func registryDeleteKey(path string, key string) error {
 	var handle syscall.Handle
-	err := syscall.RegOpenKeyEx(syscall.HKEY_CURRENT_USER, syscall.StringToUTF16Ptr(path), 0, syscall.KEY_READ, &handle)
+	err := syscall.RegOpenKeyEx(syscall.HKEY_CURRENT_USER, syscall.StringToUTF16Ptr(path), 0, syscall.KEY_WRITE, &handle)
 	if err != nil {
 		return err
 	}

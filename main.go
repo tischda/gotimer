@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"flag"
+	"time"
 )
 
 var start string
@@ -64,7 +65,7 @@ func getNanos(timer string) uint64 {
 func setNanos(timer string) {
 	createTimerGroup()
 	log.Println("Starting timer", timer)
-	// TODO: set value
+	registrySetQword(path + "\\" + subkey, timer, uint64(time.Now().UnixNano()))
 }
 
 // If "path" does not exist, it will be created
