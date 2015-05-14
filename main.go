@@ -59,23 +59,15 @@ func printElapsed(timer string) {
 func getNanos(timer string) uint64 {
 	nanos, err := registryGetQword(path + "\\" + subkey, timer)
 	if (err != nil) {
-		log.Fatalf("The timer %q has not been started.", timer)
+		log.Fatalf("The timer %q has not been started", timer)
 	}
 	return nanos
 }
 
 func setNanos(timer string) {
-	createTimerGroup()
+	createTimersRegistryKey()
 	log.Println("Starting timer", timer)
 	registrySetQword(path + "\\" + subkey, timer, uint64(time.Now().UnixNano()))
-}
-
-// If "path" does not exist, it will be created
-func createTimerGroup() {
-	err := registryCreateKey(path + "\\" + subkey)
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func clearTimer(timer string) {
@@ -83,11 +75,19 @@ func clearTimer(timer string) {
 }
 
 func clearAllTimers() {
-	deleteTimerGroup()
+	deleteTimersRegistryKey()
 	fmt.Println("All timers deleted")
 }
 
-func deleteTimerGroup() {
+// If "path" does not exist, it will be created
+func createTimersRegistryKey() {
+	err := registryCreateKey(path + "\\" + subkey)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func deleteTimersRegistryKey() {
 	err := registryDeleteKey(path, subkey)
 	if (err != nil) {
 		log.Fatal(err)
