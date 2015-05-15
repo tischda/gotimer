@@ -1,8 +1,9 @@
 ﻿timer
 =====
 
-Utility for Windows written in GO to measure the time between two events.
-Timers are persisted in the Windows registry `HKCU\Software\Tischer` as follows: 
+Windows utility written in GO to measure the time between two events.
+Timers are persisted in the Windows registry key
+`HKCU\Software\Tischer\timers` as follows:
 
 Name  | Type      | Data
 ----  | ----      | ----
