@@ -4,9 +4,9 @@
 Utility for Windows written in GO to measure the time between two events.
 Timers are persisted in the Windows registry `HKCU\Software\Tischer` as follows: 
 
-Name    Type        Data
-----    ----        ----
-t1      REG_QWORD   13de77095f0a6014
+Name  | Type      | Data
+----  | ----      | ----
+t1    | REG_QWORD | 13de77095f0a6014
 
 Data is the number of nanoseconds elapsed since January 1, 1970 UTC.
 
