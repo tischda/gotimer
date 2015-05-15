@@ -2,6 +2,23 @@
 =====
 
 Utility for Windows written in GO to measure the time between two events.
+Timers are persisted in the Windows registry `HKCU\Software\Tischer` as follows: 
+
+Name    Type        Data
+----    ----        ----
+t1      REG_QWORD   13de77095f0a6014
+
+Data is the number of nanoseconds elapsed since January 1, 1970 UTC.
+
+### Compile
+
+Tested with GO 1.4.2. There are no dependencies.
+
+~~~
+go build
+~~~
+
+### Usage
 
 ~~~
 Usage of timer:
@@ -11,8 +28,7 @@ Usage of timer:
   -stop="REQUIRED": stop timer and print elapsed time
 ~~~
 
-Example usage
--------------
+### Example
 
 ~~~
 U:\src\timer>timer -start t1
