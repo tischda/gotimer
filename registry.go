@@ -30,7 +30,8 @@ func registryGetQword(path string, valueName string) (uint64, error) {
 	var vtype uint32
 
 	err := syscall.RegQueryValueEx(
-		handle, syscall.StringToUTF16Ptr(valueName),
+		handle,
+		syscall.StringToUTF16Ptr(valueName),
 		nil,
 		&vtype,
 		(*byte)(unsafe.Pointer(&value)),
