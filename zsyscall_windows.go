@@ -5,25 +5,11 @@ import (
 	"unsafe"
 )
 
-// cf. syscall/ztypes_windows.go and https://msdn.microsoft.com/en-us/library/windows/desktop/ms724884(v=vs.85).aspx
-var valueTypeName = []string{
-	syscall.REG_NONE:                       "REG_NONE",
-	syscall.REG_SZ:                         "REG_SZ",
-	syscall.REG_EXPAND_SZ:                  "REG_EXPAND_SZ",
-	syscall.REG_BINARY:                     "REG_BINARY",
-	syscall.REG_DWORD_LITTLE_ENDIAN:        "REG_DWORD_LITTLE_ENDIAN",
-	syscall.REG_DWORD_BIG_ENDIAN:           "REG_DWORD_BIG_ENDIAN",
-	syscall.REG_LINK:                       "REG_LINK",
-	syscall.REG_MULTI_SZ:                   "REG_MULTI_SZ",
-	syscall.REG_RESOURCE_LIST:              "REG_RESOURCE_LIST",
-	syscall.REG_FULL_RESOURCE_DESCRIPTOR:   "REG_FULL_RESOURCE_DESCRIPTOR",
-	syscall.REG_RESOURCE_REQUIREMENTS_LIST: "REG_RESOURCE_REQUIREMENTS_LIST",
-	syscall.REG_QWORD_LITTLE_ENDIAN:        "REG_QWORD_LITTLE_ENDIAN",
-}
-
-// Inspired from https://github.com/golang/sys/blob/master/windows/registry/
+// Code Copyright 2015 The Go Authors extracted from:
+// https://github.com/golang/sys/blob/master/windows/registry/zsyscall_windows.go
 
 var (
+	// Advanced Services (advapi32.dll) provide access to the Windows registry
 	modadvapi32 = syscall.NewLazyDLL("advapi32.dll")
 
 	procRegCreateKeyExW = modadvapi32.NewProc("RegCreateKeyExW")
