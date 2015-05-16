@@ -128,7 +128,7 @@ func registryOpenKey(path string, desiredAccess uint32) syscall.Handle {
 		desiredAccess,
 		&handle)
 	if err != nil {
-		log.Println("Cannot open path %q in the registry\n", path)
+		log.Printf("Cannot open path %q in the registry\n", path)
 	}
 	return handle
 }
