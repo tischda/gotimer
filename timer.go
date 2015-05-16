@@ -16,6 +16,7 @@ const (
 func startTimer(timer string) {
 	log.Println("Starting timer", timer)
 	createTimersRegistryKey()
+	// conversion int64 -> uint64 ok (nanos > 0)
 	registrySetQword(path+"\\"+subkey, timer, uint64(time.Now().UnixNano()))
 }
 
@@ -36,6 +37,7 @@ func getDuration(timer string) time.Duration {
 	if err != nil {
 		log.Fatalf("Timer record %q not found", timer)
 	}
+	// conversion uint64 -> int64 ok, since original value was int64
 	t0 := time.Unix(0, int64(nanos))
 	t1 := time.Now()
 	return t1.Sub(t0)
