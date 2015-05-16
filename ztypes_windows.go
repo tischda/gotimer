@@ -21,8 +21,3 @@ var valueTypeName = []string{
 	syscall.REG_RESOURCE_REQUIREMENTS_LIST: "REG_RESOURCE_REQUIREMENTS_LIST",
 	syscall.REG_QWORD_LITTLE_ENDIAN:        "REG_QWORD_LITTLE_ENDIAN",
 }
-
-
-// Error code required in registryGetNextEnumValue()
-// https://msdn.microsoft.com/en-us/library/aa368072(v=vs.85).aspx
-const ERROR_NO_MORE_ITEMS syscall.Errno = 259

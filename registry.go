@@ -83,21 +83,20 @@ func registryDeleteKey(path string, key string) error {
 	return regDeleteKey(handle, syscall.StringToUTF16Ptr(key))
 }
 
+// Enumerates the values for the specified registry key. The function
+// returns an array of valueNames.
 func registryEnumValues(path string) []string {
-
 	var values []string
-	var err error = nil
-
-	for i := 0; err == nil; i++ {
-		var name string
+	name, err := registryGetNextEnumValue(path, uint32(0))
+	for i := 1; err == nil; i++ {
+		values = append(values, name)
 		name, err = registryGetNextEnumValue(path, uint32(i))
-		if err != ERROR_NO_MORE_ITEMS {
-			values = append(values, name)
-		}
 	}
 	return values
 }
 
+// Enumerates the values for the specified registry key. The function
+// returns one indexed value name for the key each time it is called.
 func registryGetNextEnumValue(path string, index uint32) (string, error) {
 	handle := registryOpenKey(path, syscall.KEY_READ)
 	defer syscall.RegCloseKey(handle)
@@ -115,10 +114,8 @@ func registryGetNextEnumValue(path string, index uint32) (string, error) {
 		nil,
 		nil,
 		nil)
-
 	return syscall.UTF16ToString(name), err
 }
-
 
 // Opens a Windows HKCU registry key and returns a handle. You must close
 // the handle with `defer syscall.RegCloseKey(handle)` in the calling code.
