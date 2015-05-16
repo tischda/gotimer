@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 )
@@ -20,7 +21,7 @@ func startTimer(timer string) {
 
 // Prints the time elapsed since the timer record was created in the registry.
 func readTimer(timer string) {
-	log.Printf("Elapsed time (%s): %s\n", timer, getDuration(timer).String())
+	fmt.Printf("Elapsed time (%s): %s\n", timer, getDuration(timer).String())
 }
 
 // Removes the timer record from the registry.
