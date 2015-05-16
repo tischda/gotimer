@@ -15,6 +15,7 @@ var (
 	procRegCreateKeyExW = modadvapi32.NewProc("RegCreateKeyExW")
 	procRegDeleteKeyW   = modadvapi32.NewProc("RegDeleteKeyW")
 	procRegSetValueExW  = modadvapi32.NewProc("RegSetValueExW")
+	procRegEnumValueW   = modadvapi32.NewProc("RegEnumValueW")
 	procRegDeleteValueW = modadvapi32.NewProc("RegDeleteValueW")
 )
 
@@ -48,6 +49,15 @@ func regSetValueEx(key syscall.Handle, valueName *uint16, reserved uint32, vtype
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms724851(v=vs.85).aspx
 func regDeleteValue(key syscall.Handle, name *uint16) (regerrno error) {
 	r0, _, _ := syscall.Syscall(procRegDeleteValueW.Addr(), 2, uintptr(key), uintptr(unsafe.Pointer(name)), 0)
+	if r0 != 0 {
+		regerrno = syscall.Errno(r0)
+	}
+	return
+}
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms724865(v=vs.85).aspx
+func regEnumValue(key syscall.Handle, index uint32, name *uint16, nameLen *uint32, reserved *uint32, valtype *uint32, buf *byte, buflen *uint32) (regerrno error) {
+	r0, _, _ := syscall.Syscall9(procRegEnumValueW.Addr(), 8, uintptr(key), uintptr(index), uintptr(unsafe.Pointer(name)), uintptr(unsafe.Pointer(nameLen)), uintptr(unsafe.Pointer(reserved)), uintptr(unsafe.Pointer(valtype)), uintptr(unsafe.Pointer(buf)), uintptr(unsafe.Pointer(buflen)), 0)
 	if r0 != 0 {
 		regerrno = syscall.Errno(r0)
 	}

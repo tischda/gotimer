@@ -83,6 +83,43 @@ func registryDeleteKey(path string, key string) error {
 	return regDeleteKey(handle, syscall.StringToUTF16Ptr(key))
 }
 
+func registryEnumValues(path string) []string {
+
+	var values []string
+	var err error = nil
+
+	for i := 0; err == nil; i++ {
+		var name string
+		name, err = registryGetNextEnumValue(path, uint32(i))
+		if err != ERROR_NO_MORE_ITEMS {
+			values = append(values, name)
+		}
+	}
+	return values
+}
+
+func registryGetNextEnumValue(path string, index uint32) (string, error) {
+	handle := registryOpenKey(path, syscall.KEY_READ)
+	defer syscall.RegCloseKey(handle)
+
+	// https://msdn.microsoft.com/en-us/library/windows/desktop/ms724872(v=vs.85).aspx
+	var nameLen uint32 = 16383
+	name := make([]uint16, nameLen)
+
+	err := regEnumValue(
+		handle,
+		index,
+		&name[0],
+		&nameLen,
+		nil,
+		nil,
+		nil,
+		nil)
+
+	return syscall.UTF16ToString(name), err
+}
+
+
 // Opens a Windows HKCU registry key and returns a handle. You must close
 // the handle with `defer syscall.RegCloseKey(handle)` in the calling code.
 func registryOpenKey(path string, desiredAccess uint32) syscall.Handle {
@@ -94,7 +131,7 @@ func registryOpenKey(path string, desiredAccess uint32) syscall.Handle {
 		desiredAccess,
 		&handle)
 	if err != nil {
-		log.Fatalf("Cannot open path %q in the registry\n", path)
+		log.Println("Cannot open path %q in the registry\n", path)
 	}
 	return handle
 }

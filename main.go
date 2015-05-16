@@ -11,6 +11,7 @@ var read string
 var stop string
 var clear bool
 var verbose bool
+var list bool
 
 func init() {
 	flag.StringVar(&start, "start", "REQUIRED", "start timer")
@@ -18,6 +19,7 @@ func init() {
 	flag.StringVar(&stop, "stop", "REQUIRED", "stop timer and print elapsed time")
 	flag.BoolVar(&clear, "clear", false, "clear all timers")
 	flag.BoolVar(&verbose, "verbose", false, "verbose output")
+	flag.BoolVar(&list, "list", false, "list timers")
 }
 
 // TODO: -C"..."  execute the command-line and display the execution time
@@ -34,7 +36,7 @@ func main() {
 		flag.Usage()
 	}
 
-	if verbose == false {
+	if ! verbose {
 		log.SetOutput(ioutil.Discard)
 	}
 
@@ -53,5 +55,9 @@ func main() {
 	if stop != "REQUIRED" {
 		readTimer(stop)
 		clearTimer(stop)
+	}
+
+	if list {
+		listTimers()
 	}
 }
