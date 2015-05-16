@@ -59,8 +59,5 @@ func createTimersRegistryKey() {
 // Deletes the timers subkey that holds all timers. Doing this will
 // effectively clear all timer records.
 func deleteTimersRegistryKey() {
-	err := registryDeleteKey(path, subkey)
-	if err != nil {
-		log.Fatal(err)
-	}
+	registryDeleteKey(path, subkey)
 }
