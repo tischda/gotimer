@@ -24,6 +24,7 @@ go build
 ~~~
 Usage of timer:
   -clear=false: clear all timers
+  -list=false: list timers
   -read="REQUIRED": read timer (elapsed time)
   -start="REQUIRED": start timer
   -stop="REQUIRED": stop timer and print elapsed time
