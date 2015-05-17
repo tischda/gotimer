@@ -47,3 +47,5 @@ GOOS=windows CGO_ENABLED=0 go build -o timer.exe
 Alternatives to consider
 ------------------------
 * https://github.com/mitchellh/gox
+* http://dave.cheney.net/2015/03/03/cross-compilation-just-got-a-whole-lot-better-in-go-1-5
+
