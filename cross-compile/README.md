@@ -24,7 +24,7 @@ Defaults env_keep += "GOROOT"
 
 Install
 -------
-The instructions from the wiki do not seems to work, I get this:
+The instructions from the wiki do not seem to work:
 
     hansolo:cross-compile daniel$ sudo ./buildpkg.sh windows amd64
     pkg/runtime (windows/amd64)
@@ -32,13 +32,18 @@ The instructions from the wiki do not seems to work, I get this:
     runtime
     go build runtime: windows/amd64 must be bootstrapped using make.bash
 
-So I follow the instruction from StackOverflow:
+So follow the instruction from StackOverflow:
 ~~~
 cd /usr/local/go/src
 sudo GOOS=windows CGO_ENABLED=0 ./make.bash --no-clean
 ~~~
 
-Test compilation:
+Actual ompilation:
 ~~~
 GOOS=windows CGO_ENABLED=0 go build -o timer.exe
 ~~~
+
+
+Alternatives to consider
+------------------------
+* https://github.com/mitchellh/gox
