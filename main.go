@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"log"
 	"io/ioutil"
+	"log"
 )
 
 var start string
@@ -36,7 +36,7 @@ func main() {
 		flag.Usage()
 	}
 
-	if ! verbose {
+	if !verbose {
 		log.SetOutput(ioutil.Discard)
 	}
 

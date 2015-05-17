@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	REG_PATH string  = `SOFTWARE\Tischer`
+	REG_PATH   string = `SOFTWARE\Tischer`
 	REG_SUBKEY string = `timers`
 )
 
