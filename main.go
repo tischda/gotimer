@@ -1,3 +1,5 @@
+// +build windows
+
 package main
 
 import (
@@ -26,6 +28,8 @@ func init() {
 // TODO: -list option, to list all timers
 
 func main() {
+	registry = realRegistry{}
+
 	// configure logging
 	log.SetFlags(0)
 

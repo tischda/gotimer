@@ -11,13 +11,15 @@ const (
 	REG_SUBKEY string = `timers`
 )
 
+var registry Registry
+
 // Starts the specified timer by creating a registry key containing
 // the number of nanoseconds elapsed since January 1, 1970 UTC (int64).
 func startTimer(timer string) {
 	log.Println("Starting timer", timer)
 	createTimersRegistryKey()
 	// conversion int64 -> uint64 ok (nanos > 0)
-	registrySetQword(REG_PATH+"\\"+REG_SUBKEY, timer, uint64(time.Now().UnixNano()))
+	registry.SetQword(REG_PATH+"\\"+REG_SUBKEY, timer, uint64(time.Now().UnixNano()))
 }
 
 // Prints the time elapsed since the timer record was created in the registry.
@@ -27,13 +29,13 @@ func readTimer(timer string) {
 
 // Removes the timer record from the registry.
 func clearTimer(timer string) {
-	registryDeleteValue(REG_PATH+"\\"+REG_SUBKEY, timer)
+	registry.DeleteValue(REG_PATH+"\\"+REG_SUBKEY, timer)
 }
 
 // Reads the timestamp recorded in the registry for this timer and
 // calculates the duration from then to the current time.
 func getDuration(timer string) time.Duration {
-	nanos, err := registryGetQword(REG_PATH+"\\"+REG_SUBKEY, timer)
+	nanos, err := registry.GetQword(REG_PATH+"\\"+REG_SUBKEY, timer)
 	if err != nil {
 		log.Fatalf("Timer record %q not found", timer)
 	}
@@ -53,7 +55,7 @@ func clearAllTimers() {
 // Creates the timers subkey that will hold all timers. Note that
 // if "path" does not exist, it will also be created.
 func createTimersRegistryKey() {
-	err := registryCreateKey(REG_PATH + "\\" + REG_SUBKEY)
+	err := registry.CreateKey(REG_PATH + "\\" + REG_SUBKEY)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,11 +64,11 @@ func createTimersRegistryKey() {
 // Deletes the timers subkey that holds all timers. Doing this will
 // effectively clear all timer records.
 func deleteTimersRegistryKey() {
-	registryDeleteKey(REG_PATH, REG_SUBKEY)
+	registry.DeleteKey(REG_PATH, REG_SUBKEY)
 }
 
 func listTimers() {
-	timers := registryEnumValues(REG_PATH + "\\" + REG_SUBKEY)
+	timers := registry.EnumValues(REG_PATH + "\\" + REG_SUBKEY)
 	if len(timers) == 0 {
 		fmt.Println("No timers")
 	} else {

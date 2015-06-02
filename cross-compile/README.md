@@ -1,8 +1,10 @@
 Building windows go programs on linux
 =====================================
 
-Instructions here:
+Instructions (not working):
 * https://github.com/golang/go/wiki/WindowsCrossCompiling
+
+Use this instead:
 * http://stackoverflow.com/questions/12168873/cross-compile-go-on-osx
 
 On MacOS, commands need to be run with sudo.
@@ -24,21 +26,12 @@ Defaults env_keep += "GOROOT"
 
 Install
 -------
-The instructions from the wiki do not seem to work:
-
-    hansolo:cross-compile daniel$ sudo ./buildpkg.sh windows amd64
-    pkg/runtime (windows/amd64)
-    go tool dist: opendir /usr/local/go/src/pkg/runtime: No such file or directory
-    runtime
-    go build runtime: windows/amd64 must be bootstrapped using make.bash
-
-So follow the instruction from StackOverflow:
 ~~~
 cd /usr/local/go/src
 sudo GOOS=windows CGO_ENABLED=0 ./make.bash --no-clean
 ~~~
 
-Actual ompilation:
+Actual compilation:
 ~~~
 GOOS=windows CGO_ENABLED=0 go build -o timer.exe
 ~~~

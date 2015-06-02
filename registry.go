@@ -8,9 +8,11 @@ import (
 	"unsafe"
 )
 
+type realRegistry struct{}
+
 // Writes a REG_QWORD (uint64) to the Windows registry.
-func registrySetQword(path string, valueName string, value uint64) error {
-	handle := registryOpenKey(path, syscall.KEY_SET_VALUE)
+func (realRegistry) SetQword(path string, valueName string, value uint64) error {
+	handle := OpenKey(path, syscall.KEY_SET_VALUE)
 	defer syscall.RegCloseKey(handle)
 
 	return regSetValueEx(
@@ -23,8 +25,8 @@ func registrySetQword(path string, valueName string, value uint64) error {
 }
 
 // Reads a REG_QWORD (uint64) from the Windows registry.
-func registryGetQword(path string, valueName string) (uint64, error) {
-	handle := registryOpenKey(path, syscall.KEY_READ)
+func (realRegistry) GetQword(path string, valueName string) (uint64, error) {
+	handle := OpenKey(path, syscall.KEY_READ)
 	defer syscall.RegCloseKey(handle)
 
 	var value uint64
@@ -50,14 +52,14 @@ func registryGetQword(path string, valueName string) (uint64, error) {
 }
 
 // Deletes a key value from the Windows registry.
-func registryDeleteValue(path string, valueName string) error {
-	handle := registryOpenKey(path, syscall.KEY_WRITE)
+func (realRegistry) DeleteValue(path string, valueName string) error {
+	handle := OpenKey(path, syscall.KEY_WRITE)
 	defer syscall.RegCloseKey(handle)
 	return regDeleteValue(handle, syscall.StringToUTF16Ptr(valueName))
 }
 
 // Creates a key in the Windows registry.
-func registryCreateKey(path string) error {
+func (realRegistry) CreateKey(path string) error {
 
 	// handle is required by function call, but not used
 	var handle syscall.Handle
@@ -79,28 +81,28 @@ func registryCreateKey(path string) error {
 }
 
 // Deletes a key from the Windows registry.
-func registryDeleteKey(path string, key string) error {
-	handle := registryOpenKey(path, syscall.KEY_WRITE)
+func (realRegistry) DeleteKey(path string, key string) error {
+	handle := OpenKey(path, syscall.KEY_WRITE)
 	defer syscall.RegCloseKey(handle)
 	return regDeleteKey(handle, syscall.StringToUTF16Ptr(key))
 }
 
 // Enumerates the values for the specified registry key. The function
 // returns an array of valueNames.
-func registryEnumValues(path string) []string {
+func (realRegistry) EnumValues(path string) []string {
 	var values []string
-	name, err := registryGetNextEnumValue(path, uint32(0))
+	name, err := GetNextEnumValue(path, uint32(0))
 	for i := 1; err == nil; i++ {
 		values = append(values, name)
-		name, err = registryGetNextEnumValue(path, uint32(i))
+		name, err = GetNextEnumValue(path, uint32(i))
 	}
 	return values
 }
 
 // Enumerates the values for the specified registry key. The function
 // returns one indexed value name for the key each time it is called.
-func registryGetNextEnumValue(path string, index uint32) (string, error) {
-	handle := registryOpenKey(path, syscall.KEY_READ)
+func GetNextEnumValue(path string, index uint32) (string, error) {
+	handle := OpenKey(path, syscall.KEY_READ)
 	defer syscall.RegCloseKey(handle)
 
 	// https://msdn.microsoft.com/en-us/library/windows/desktop/ms724872(v=vs.85).aspx
@@ -121,7 +123,7 @@ func registryGetNextEnumValue(path string, index uint32) (string, error) {
 
 // Opens a Windows HKCU registry key and returns a handle. You must close
 // the handle with `defer syscall.RegCloseKey(handle)` in the calling code.
-func registryOpenKey(path string, desiredAccess uint32) syscall.Handle {
+func OpenKey(path string, desiredAccess uint32) syscall.Handle {
 	var handle syscall.Handle
 	err := syscall.RegOpenKeyEx(
 		syscall.HKEY_CURRENT_USER,
