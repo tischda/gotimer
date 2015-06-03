@@ -1,10 +1,10 @@
 package main
 
 import (
+	"io/ioutil"
+	"os"
 	"testing"
 	"time"
-	"os"
-	"io/ioutil"
 )
 
 var mock = mockRegistry{}
@@ -27,7 +27,7 @@ func TestStop(t *testing.T) {
 	startTimer("t2")
 	time.Sleep(10 * time.Millisecond)
 	actual := getDuration("t2")
-	if actual < 9 * time.Millisecond || actual > 14 * time.Millisecond {
+	if actual < 9*time.Millisecond || actual > 14*time.Millisecond {
 		t.Errorf("Expected: 10 msec, was: %q", actual)
 	}
 }
