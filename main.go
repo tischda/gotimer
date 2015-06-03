@@ -14,18 +14,17 @@ var stop string
 var clear bool
 var verbose bool
 var list bool
+var command string
 
 func init() {
 	flag.StringVar(&start, "start", "REQUIRED", "start timer")
 	flag.StringVar(&read, "read", "REQUIRED", "read timer (elapsed time)")
 	flag.StringVar(&stop, "stop", "REQUIRED", "stop timer and print elapsed time")
+	flag.StringVar(&command, "C", "REQUIRED", "print elapsed time for command")
 	flag.BoolVar(&clear, "clear", false, "clear all timers")
 	flag.BoolVar(&verbose, "verbose", false, "verbose output")
 	flag.BoolVar(&list, "list", false, "list timers")
 }
-
-// TODO: -C"..."  execute the command-line and display the execution time
-// TODO: -list option, to list all timers
 
 func main() {
 	registry = realRegistry{}
@@ -63,5 +62,10 @@ func main() {
 
 	if list {
 		listTimers()
+	}
+
+	// http://bit.ly/1dMD2YN
+	if command != "REQUIRED" {
+		process("cmd", "/c", command)
 	}
 }

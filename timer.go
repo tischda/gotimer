@@ -79,8 +79,9 @@ func listTimers() {
 }
 
 func process(name string, args ...string) {
-	defer whenDone()("Time processing %v: %v", name)
-	exec.Command(name, args...).Run()
+	defer whenDone()("Time processing command: %v")
+	out, _ := exec.Command(name, args...).CombinedOutput()
+	log.Printf("%s", out)
 }
 
 func whenDone() func(format string, args ...interface{}) {

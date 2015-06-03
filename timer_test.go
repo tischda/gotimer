@@ -56,10 +56,10 @@ func TestList(t *testing.T) {
 }
 
 func TestProcess(t *testing.T) {
-	expected := "Time processing sleep: 1."
+	expected := "Time processing command: 1."
 	actual := captureOutput(func() {
 		process("sleep", "1")
-	})[:25]
+	})[:27]
 	if actual != expected {
 		t.Errorf("Expected: %q, was: %q", expected, actual)
 	}
