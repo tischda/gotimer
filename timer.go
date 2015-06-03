@@ -5,6 +5,7 @@ import (
 	"log"
 	"sort"
 	"time"
+	"os/exec"
 )
 
 const (
@@ -41,9 +42,8 @@ func getDuration(timer string) time.Duration {
 		log.Fatalf("Timer record %q not found", timer)
 	}
 	// conversion uint64 -> int64 ok, since original value was int64
-	t0 := time.Unix(0, int64(nanos))
-	t1 := time.Now()
-	return t1.Sub(t0)
+	start := time.Unix(0, int64(nanos))
+	return time.Since(start)
 }
 
 // Removes all timers from the registry.
@@ -75,5 +75,17 @@ func listTimers() {
 	} else {
 		sort.Strings(timers)
 		fmt.Println(timers)
+	}
+}
+
+func process(name string, args ...string) {
+	defer whenDone()("Time processing %v: %v", name)
+	exec.Command(name, args...).Run()
+}
+
+func whenDone() func(format string, args ...interface{}) {
+	start := time.Now()
+	return func(format string, args ...interface{}) {
+		fmt.Printf(format, append(args, time.Since(start))...)
 	}
 }

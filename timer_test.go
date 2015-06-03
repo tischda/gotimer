@@ -46,22 +46,36 @@ func TestList(t *testing.T) {
 	startTimer("t1")
 	startTimer("t2")
 
+	expected := "[t1 t2]\n"
+	actual := captureOutput(listTimers)
+	if actual != expected {
+		t.Errorf("Expected: %q, was: %q", expected, actual)
+	}
+}
+
+func TestProcess(t *testing.T) {
+	expected := "Time processing sleep: 1."
+	actual := captureOutput(func() {
+		process("sleep", "1")
+	})[:25]
+	if actual != expected {
+		t.Errorf("Expected: %q, was: %q", expected, actual)
+	}
+}
+
+// captures Stdout and returns output of function f()
+func captureOutput(f func()) string {
 	// redirect output
 	old := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
-	listTimers()
+	f()
 
 	// reset output again
 	w.Close()
 	os.Stdout = old
 
 	captured, _ := ioutil.ReadAll(r)
-
-	expected := "[t1 t2]\n"
-	actual := string(captured)
-	if actual != expected {
-		t.Errorf("Expected: %q, was: %q", expected, actual)
-	}
+	return string(captured)
 }
