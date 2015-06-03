@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"time"
 )
 
@@ -72,6 +73,7 @@ func listTimers() {
 	if len(timers) == 0 {
 		fmt.Println("No timers")
 	} else {
+		sort.Strings(timers)
 		fmt.Println(timers)
 	}
 }
