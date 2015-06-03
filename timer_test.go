@@ -3,6 +3,8 @@ package main
 import (
 	"testing"
 	"time"
+	"os"
+	"io/ioutil"
 )
 
 var mock = mockRegistry{}
@@ -39,3 +41,27 @@ func TestClear(t *testing.T) {
 	}
 }
 
+func TestList(t *testing.T) {
+	clearAllTimers()
+	startTimer("t1")
+	startTimer("t2")
+
+	// redirect output
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	listTimers()
+
+	// reset output again
+	w.Close()
+	os.Stdout = old
+
+	captured, _ := ioutil.ReadAll(r)
+
+	expected := "[t1 t2]\n"
+	actual := string(captured)
+	if actual != expected {
+		t.Errorf("Expected: %q, was: %q", expected, actual)
+	}
+}
