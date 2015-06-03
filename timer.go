@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
+	"os/exec"
 	"sort"
 	"time"
-	"os/exec"
 )
 
 const (

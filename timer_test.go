@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"log"
 	"os"
 	"testing"
 	"time"
@@ -12,6 +13,7 @@ var mock = mockRegistry{}
 func init() {
 	mock.timers = make(map[string]uint64)
 	registry = mock
+	log.SetOutput(ioutil.Discard)
 }
 
 func TestStart(t *testing.T) {
