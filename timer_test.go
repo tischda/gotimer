@@ -29,3 +29,13 @@ func TestStop(t *testing.T) {
 		t.Errorf("Expected: 10 msec, was: %q", actual)
 	}
 }
+
+func TestClear(t *testing.T) {
+	startTimer("t3")
+	clearTimer("t3")
+	_, exists := mock.timers["t3"]
+	if exists {
+		t.Errorf("Expected: false, was: %q", exists)
+	}
+}
+
