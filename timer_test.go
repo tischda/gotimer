@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"time"
 )
 
 var mock = mockRegistry{}
@@ -11,11 +12,20 @@ func init() {
 	registry = mock
 }
 
-func TestHello(t *testing.T) {
-	startTimer("toto")
+func TestStart(t *testing.T) {
+	startTimer("t1")
 
-	actual := mock.timers["toto"]
+	actual := mock.timers["t1"]
 	if actual == 0 {
 		t.Errorf("Expected: >0, was: %q", actual)
+	}
+}
+
+func TestStop(t *testing.T) {
+	startTimer("t2")
+	time.Sleep(10 * time.Millisecond)
+	actual := getDuration("t2")
+	if actual < 9 * time.Millisecond || actual > 14 * time.Millisecond {
+		t.Errorf("Expected: 10 msec, was: %q", actual)
 	}
 }

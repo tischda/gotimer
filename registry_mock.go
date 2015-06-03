@@ -10,11 +10,11 @@ func (r mockRegistry) SetQword(path string, valueName string, value uint64) erro
 }
 
 func (r mockRegistry) GetQword(path string, valueName string) (uint64, error) {
-	var value uint64
-	return value, nil
+	return r.timers[valueName], nil
 }
 
 func (r mockRegistry) DeleteValue(path string, valueName string) error {
+	delete(r.timers, valueName)
 	return nil
 }
 
@@ -27,6 +27,9 @@ func (r mockRegistry) DeleteKey(path string, key string) error {
 }
 
 func (r mockRegistry) EnumValues(path string) []string {
-	var values []string
-	return values
+	keys := make([]string, 0, len(r.timers))
+	for k := range r.timers {
+		keys = append(keys, k)
+	}
+	return keys
 }
