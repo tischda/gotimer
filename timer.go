@@ -6,7 +6,9 @@ import (
 	"os/exec"
 	"sort"
 	"time"
+	"os"
 )
+
 
 const (
 	REG_PATH   string = `SOFTWARE\Tischer`
@@ -80,11 +82,10 @@ func listTimers() {
 
 func process(name string, args ...string) {
 	defer whenDone()("Time processing command: %v")
-	out, _ := exec.Command(name, args...).CombinedOutput()
-
-	// TODO: Thousand separators for command "dir" appear strange on windows terminal
-	// but not when redirected to file: `timer.exe -C "dir" -verbose 2> t_out.txt`
-	log.Printf("%s", out)
+	cmd := exec.Command(name, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
 }
 
 func whenDone() func(format string, args ...interface{}) {
