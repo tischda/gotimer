@@ -71,3 +71,6 @@ on_finish:
     If (Test-Path .\xunit-report.xml) {
       (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-report.xml))
     }
+
+# TODO: There is an issue with our xunit format, see what is expected here:
+# http://help.appveyor.com/discussions/problems/2146-xml-test-results-not-read-by-appveyor
