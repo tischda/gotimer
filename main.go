@@ -6,6 +6,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"fmt"
 )
 
 var start string
@@ -14,6 +15,7 @@ var stop string
 var clear bool
 var verbose bool
 var list bool
+var version bool
 var command string
 
 func init() {
@@ -23,6 +25,7 @@ func init() {
 	flag.StringVar(&command, "C", "REQUIRED", "print elapsed time for command")
 	flag.BoolVar(&clear, "clear", false, "clear all timers")
 	flag.BoolVar(&verbose, "verbose", false, "verbose output")
+	flag.BoolVar(&version, "version", false, "print version")
 	flag.BoolVar(&list, "list", false, "list timers")
 }
 
@@ -37,6 +40,11 @@ func main() {
 
 	if flag.NFlag() == 0 {
 		flag.Usage()
+	}
+
+	if version {
+		fmt.Println("timer v1.1.0")
+		return
 	}
 
 	if !verbose {
