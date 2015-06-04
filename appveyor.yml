@@ -26,6 +26,7 @@ init:
     if ($app) {
       $app.Uninstall()
     }
+- git config --global core.autocrlf input    
 
 # scripts that run after cloning repository
 install:
@@ -66,4 +67,7 @@ deploy: off
 
 # after build failure or success
 on_finish:
-  - ps: If (Test-Path .\xunit-report.xml) { (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-report.xml)) }
+- ps: >-
+    If (Test-Path .\xunit-report.xml) {
+      (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-report.xml))
+    }
