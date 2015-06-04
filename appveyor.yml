@@ -48,7 +48,7 @@ build_script:
 # to run your custom scripts instead of automatic tests
 test_script:
   - go test -v -cover
-#  - go test -v | go2xunit > xunit-report.xml
+  - go test -v | go2xunit > xunit-report.xml
   - timer.exe -version
   - timer.exe -start t1 -verbose
   - timer.exe -read t1
