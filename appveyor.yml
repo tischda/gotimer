@@ -14,7 +14,6 @@ environment:
   GOPATH: c:\gopath
 
 init:
-  - echo init
   - ps: >-
     $app = Get-WmiObject -Class Win32_Product -Filter "Vendor = 'http://golang.org'"
     if ($app) {
@@ -23,7 +22,6 @@ init:
 
 # scripts that run after cloning repository
 install:
-  - echo install
   - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
   - appveyor DownloadFile https://storage.googleapis.com/golang/go1.4.2.windows-amd64.msi
   - msiexec /i go1.4.2.windows-amd64.msi /q
@@ -42,10 +40,10 @@ build_script:
   - go build
 
 # to disable automatic tests
-test: off
-#  - cd %APPVEYOR_BUILD_FOLDER%
-#  - SET PATH=%GOPATH%\bin;%PATH%
-#  - go test
+test:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - SET PATH=%GOPATH%\bin;%PATH%
+  - go test
 
 # to disable deployment
 deploy: off
