@@ -17,7 +17,7 @@ out
 logs
 *.log
 *.exe
-report.xml
+*report.xml
 
 # ----------- workspaces
 
