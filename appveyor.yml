@@ -18,10 +18,11 @@ os: Windows Server 2012 R2
 environment:
   GOPATH: c:\gopath
 
-# do not indent -ps!
+# do not indent -ps and leave line break!
 init:
 - ps: >-
     $app = Get-WmiObject -Class Win32_Product -Filter "Vendor = 'http://golang.org'"
+	
     if ($app) {
       $app.Uninstall()
     }
