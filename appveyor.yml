@@ -36,11 +36,18 @@ install:
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
   - SET PATH=%GOPATH%\bin;%PATH%
-  - go build
+  - go build -o timer.exe
 
 # to disable automatic tests
 test_script:
-  - go test -cover
+  - go test -v -cover
+  - timer.exe -start t1 -verbose
+  - timer.exe -read t1
+  - timer.exe -list
+  - timer.exe -stop t2 -verbose
+  - timer.exe -stop t1 -verbose
+  - timer.exe -clear -verbose
+  - timer.exe -C "dir *.exe"
 
 # to disable deployment
 deploy: off
