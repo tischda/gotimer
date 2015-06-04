@@ -81,7 +81,7 @@ func listTimers() {
 }
 
 func process(name string, args ...string) {
-	defer whenDone()("Time processing command: %v")
+	defer whenDone()("Time processing command: %v\n")
 	cmd := exec.Command(name, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

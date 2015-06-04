@@ -44,10 +44,16 @@ build_script:
   - SET PATH=%GOPATH%\bin;%PATH%
   - go build -o timer.exe
 
-# to disable automatic tests
+# to run your custom scripts instead of automatic tests
 test_script:
   - go test -v -cover
-  - go test -v | go-junit-report > report.xml
+  - go test -v | go-junit-report > junit-report.xml
+
+  # upload results to AppVeyor
+  - $wc = New-Object 'System.Net.WebClient'
+  - $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\junit-report.xml))
+
+  # a few real world tests just to make sure
   - timer.exe -version
   - timer.exe -start t1 -verbose
   - timer.exe -read t1

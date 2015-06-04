@@ -43,7 +43,7 @@ func main() {
 	}
 
 	if version {
-		fmt.Println("timer v1.1.0")
+		fmt.Println("Timer v1.1.0")
 		return
 	}
 
