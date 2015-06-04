@@ -3,8 +3,13 @@ version: "1.1.0-{build}"
 
 # branches to build
 branches:
+  # whitelist
   only:
     - master
+
+  # blacklist
+  except:
+    - gh-pages
 
 # Operating system (build VM template)
 os: Windows Server 2012 R2
@@ -31,6 +36,7 @@ install:
   - go env
   - mkdir c:\gopath
   - go get -u golang.org/x/tools/cmd/cover
+  - go get -u github.com/jstemmer/go-junit-report
   
 # to run your custom scripts instead of automatic MSBuild
 build_script:
@@ -41,13 +47,19 @@ build_script:
 # to disable automatic tests
 test_script:
   - go test -v -cover
+  - go test -v | go-junit-report > report.xml
+  - timer.exe -version
   - timer.exe -start t1 -verbose
   - timer.exe -read t1
   - timer.exe -list
-  - timer.exe -stop t2 -verbose
   - timer.exe -stop t1 -verbose
   - timer.exe -clear -verbose
   - timer.exe -C "dir *.exe"
+
+# artifacts configuration
+artifacts:
+  - path: timer.exe
+    name: Timer
 
 # to disable deployment
 deploy: off
