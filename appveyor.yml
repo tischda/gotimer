@@ -17,7 +17,7 @@ init:
     if ($app) {
       $app.Uninstall()
     }
-	
+
 # scripts that run after cloning repository
 install:
   - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
@@ -38,10 +38,10 @@ build_script:
   - go build
 
 # to disable automatic tests
-test:
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - SET PATH=%GOPATH%\bin;%PATH%
-  - go test
+test: off
+#  - cd %APPVEYOR_BUILD_FOLDER%
+#  - SET PATH=%GOPATH%\bin;%PATH%
+#  - go test
 
 # to disable deployment
 deploy: off
