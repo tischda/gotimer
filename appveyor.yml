@@ -41,7 +41,7 @@ build_script:
   - go build
 
 # to disable automatic tests
-test:
+test_script:
   - cd %APPVEYOR_BUILD_FOLDER%
   - SET PATH=%GOPATH%\bin;%PATH%
   - go test
