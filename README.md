@@ -23,6 +23,7 @@ go build
 
 ~~~
 Usage of timer:
+  -C="REQUIRED": print elapsed time for command
   -clear=false: clear all timers
   -list=false: list timers
   -read="REQUIRED": read timer (elapsed time)
