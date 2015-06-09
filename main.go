@@ -39,10 +39,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("coucou")
-
 	if *showVersion {
-		fmt.Print("timer version", version)
+		fmt.Println("timer version", version)
 		return
 	}
 
