@@ -20,7 +20,7 @@ func main() {
 	clear := flag.Bool("clear", false, "clear all timers")
 	verbose := flag.Bool("verbose", false, "verbose output")
 	list := flag.Bool("list", false, "list timers")
-	showVersion := flag.Bool("version", false, "print version")
+	showVersion := flag.Bool("version", false, "print version and exit")
 
 	registry = realRegistry{}
 
