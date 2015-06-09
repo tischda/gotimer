@@ -20,8 +20,10 @@ go build
 
 ### Usage
 
+
 ~~~
-Usage of timer:
+Usage: timer [options] name
+  name: name of the timer
   -C="REQUIRED": print elapsed time for command
   -clear=false: clear all timers
   -list=false: list timers
@@ -29,6 +31,7 @@ Usage of timer:
   -start="REQUIRED": start timer
   -stop="REQUIRED": stop timer and print elapsed time
   -verbose=false: verbose output
+  -version=false: print version
 ~~~
 
 ### Example
