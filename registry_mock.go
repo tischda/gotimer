@@ -4,6 +4,12 @@ type mockRegistry struct {
 	timers map[string]uint64
 }
 
+var mock = mockRegistry{}
+
+func init() {
+	mock.timers = make(map[string]uint64)
+}
+
 func (r mockRegistry) SetQword(path regPath, valueName string, value uint64) error {
 	r.timers[valueName] = value
 	return nil

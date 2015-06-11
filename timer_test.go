@@ -9,12 +9,8 @@ import (
 )
 
 var sut timer
-var mock mockRegistry
 
 func init() {
-	mock = mockRegistry{}
-	mock.timers = make(map[string]uint64)
-
 	sut = timer{
 		registry: mock,
 	}
