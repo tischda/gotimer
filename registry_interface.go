@@ -1,19 +1,29 @@
 package main
 
-// Registry key indexes, do not reorder
+// A registry path is composed of an hKey index and the string representation
+// of the path withing that hKey. We use hKey indexes to avoid dependency on
+// non-portable syscall values.
+type regPath struct {
+	hKeyIdx  uint8
+	lpSubKey string
+}
+
+// Registry hKey index values, do not reorder
 const (
-	SOFTWARE = iota
-	TIMERS
-	TIMERS_CHILD
+	HKEY_CLASSES_ROOT = iota
+	HKEY_CURRENT_USER
+	HKEY_LOCAL_MACHINE
+	HKEY_USERS
+	HKEY_PERFORMANCE_DATA
+	HKEY_CURRENT_CONFIG
+	HKEY_DYN_DATA
 )
 
-var registry Registry
-
 type Registry interface {
-	SetQword(key int, valueName string, value uint64) error
-	GetQword(key int, valueName string) (uint64, error)
-	DeleteValue(key int, valueName string) error
-	CreateKey(key int) error
-	DeleteKey(parent int, child int) error
-	EnumValues(key int) []string
+	SetQword(path regPath, valueName string, value uint64) error
+	GetQword(path regPath, valueName string) (uint64, error)
+	DeleteValue(path regPath, valueName string) error
+	CreateKey(path regPath) error
+	DeleteKey(path regPath) error
+	EnumValues(ath regPath) []string
 }

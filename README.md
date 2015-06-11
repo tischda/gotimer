@@ -25,13 +25,13 @@ go build
 Usage: timer [options] name
   name: name of the timer
   -C="REQUIRED": print elapsed time for command
-  -clear=false: clear all timers
+  -clear=false: clear all timers / uninstall
   -list=false: list timers
   -read="REQUIRED": read timer (elapsed time)
   -start="REQUIRED": start timer
   -stop="REQUIRED": stop timer and print elapsed time
   -verbose=false: verbose output
-  -version=false: print version
+  -version=false: print version and exit
 ~~~
 
 ### Example
@@ -50,8 +50,7 @@ U:\src\timer>timer -start t3 -read t1 -stop t2
 Elapsed time (t1): 1m30.6471884s
 Elapsed time (t2): 34.3280773s
 
-U:\src\timer>timer -clear -verbose
-All timers deleted
+U:\src\timer>timer -clear
 ~~~
 
 ### Other timers

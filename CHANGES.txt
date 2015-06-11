@@ -2,6 +2,12 @@
 timer - change history
 ===============================================================================
 
+Version 1.1.1 (11 June 2015)
+----------------------------
+* Refactored registry internals
+* Added more tests
+
+
 Version 1.1.0 (04 June 2015)
 ----------------------------
 * Added -C option to time execution of a commmand 
