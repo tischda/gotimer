@@ -37,7 +37,7 @@ func (realRegistry) SetQword(path regPath, valueName string, value uint64) error
 
 // Reads a REG_QWORD (uint64) from the Windows registry.
 func (realRegistry) GetQword(path regPath, valueName string) (uint64, error) {
-	handle := openKey(path, syscall.KEY_READ)
+	handle := openKey(path, syscall.KEY_QUERY_VALUE)
 	defer syscall.RegCloseKey(handle)
 
 	var value uint64
@@ -64,7 +64,7 @@ func (realRegistry) GetQword(path regPath, valueName string) (uint64, error) {
 
 // Deletes a key value from the Windows registry.
 func (realRegistry) DeleteValue(path regPath, valueName string) error {
-	handle := openKey(path, syscall.KEY_WRITE)
+	handle := openKey(path, syscall.KEY_SET_VALUE)
 	defer syscall.RegCloseKey(handle)
 
 	return regDeleteValue(handle, syscall.StringToUTF16Ptr(valueName))
@@ -118,7 +118,7 @@ func (realRegistry) EnumValues(path regPath) []string {
 // Enumerates the values for the specified registry key. The function
 // returns one indexed value name for the key each time it is called.
 func getNextEnumValue(path regPath, index uint32) (string, error) {
-	handle := openKey(path, syscall.KEY_READ)
+	handle := openKey(path, syscall.KEY_QUERY_VALUE)
 	defer syscall.RegCloseKey(handle)
 
 	var nameLen uint32 = 16383
