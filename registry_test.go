@@ -3,7 +3,6 @@
 package main
 
 import (
-	"log"
 	"testing"
 )
 
@@ -14,14 +13,14 @@ func TestCreateOpenDeleteKey(t *testing.T) {
 	// create
 	err := registry.CreateKey(PATH_TIMERS)
 	if err != nil {
-		log.Fatalln("Error in CreateKey", err)
+		t.Errorf("Error in CreateKey", err)
 	}
 
 	// store value
 	expected := uint64(1234)
 	err = registry.SetQword(PATH_TIMERS, "t1", expected)
 	if err != nil {
-		log.Fatalln("Error in SetQword", err)
+		t.Errorf("Error in SetQword", err)
 	}
 
 	// list values
@@ -33,7 +32,7 @@ func TestCreateOpenDeleteKey(t *testing.T) {
 	// read value
 	actual, err1 := registry.GetQword(PATH_TIMERS, "t1")
 	if err1 != nil {
-		log.Fatalln("Error in GetQword", err1)
+		t.Errorf("Error in GetQword", err1)
 	}
 	if actual != expected {
 		t.Errorf("Expected: %q, was: %q", expected, actual)
