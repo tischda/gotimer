@@ -1,8 +1,9 @@
 ﻿# timer [![Build status](https://ci.appveyor.com/api/projects/status/au8q12tabnam2t9a?svg=true)](https://ci.appveyor.com/project/tischda/timer)
 
 Windows utility written in [Go](https://www.golang.org) to measure the time between two events.
-Timers are persisted in the Windows registry key
-`HKCU\Software\Tischer\timers` as follows:
+Timers are persisted in the Windows registry:
+
+`HKEY_CURRENT_USER\Software\Tischer\timers`
 
 Name  | Type      | Data
 ----  | ----      | ----
@@ -34,7 +35,7 @@ Usage: timer [options] name
   -version=false: print version and exit
 ~~~
 
-### Example
+Example:
 
 ~~~
 U:\src\timer>timer -start t1 -verbose
