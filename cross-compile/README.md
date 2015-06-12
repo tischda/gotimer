@@ -1,4 +1,4 @@
-Building windows go programs on linux
+Building windows GO programs on linux
 =====================================
 
 Instructions (not working):
@@ -21,7 +21,7 @@ Run `sudo visudo`
 
 Add the following to the bottom:
 
-Defaults env_keep += "GOROOT"
+`Defaults env_keep += "GOROOT"`
 
 
 Install
