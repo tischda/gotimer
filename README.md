@@ -11,12 +11,12 @@ t1    | REG_QWORD | 13de77095f0a6014
 
 Data is the number of nanoseconds elapsed since January 1, 1970 UTC.
 
-### Compile
+### Install
 
-Tested with GO 1.4.2. There are no dependencies.
+There are no dependencies.
 
 ~~~
-go build
+go get github.com/tischda/timer
 ~~~
 
 ### Usage
