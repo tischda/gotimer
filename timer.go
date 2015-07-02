@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/tischda/timer/registry"
 	"log"
 	"os"
 	"os/exec"
@@ -10,11 +11,11 @@ import (
 )
 
 type timer struct {
-	registry Registry
+	registry registry.Registry
 }
 
-var PATH_SOFTWARE = regPath{HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
-var PATH_TIMERS = regPath{HKEY_CURRENT_USER, `SOFTWARE\Tischer\timers`}
+var PATH_SOFTWARE = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
+var PATH_TIMERS = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer\timers`}
 
 // Starts the specified timer by creating a registry key containing
 // the number of nanoseconds elapsed since January 1, 1970 UTC (int64).
@@ -71,5 +72,11 @@ func whenDone() func(format string, args ...interface{}) {
 	start := time.Now()
 	return func(format string, args ...interface{}) {
 		fmt.Printf(format, append(args, time.Since(start))...)
+	}
+}
+
+func checkFatal(err error) {
+	if err != nil {
+		log.Fatalln(err)
 	}
 }

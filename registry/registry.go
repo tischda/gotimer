@@ -1,11 +1,12 @@
-package main
+// Package registry provides primitives to access the Windows Registry
+package registry
 
 // A registry path is composed of an hKey index and the string representation
 // of the path withing that hKey. We use hKey indexes to avoid dependency on
 // non-portable syscall values.
-type regPath struct {
-	hKeyIdx  uint8
-	lpSubKey string
+type RegPath struct {
+	HKeyIdx  uint8
+	LpSubKey string
 }
 
 // Registry hKey index values, do not reorder
@@ -20,10 +21,10 @@ const (
 )
 
 type Registry interface {
-	SetQword(path regPath, valueName string, value uint64) error
-	GetQword(path regPath, valueName string) (uint64, error)
-	DeleteValue(path regPath, valueName string) error
-	CreateKey(path regPath) error
-	DeleteKey(path regPath) error
-	EnumValues(ath regPath) []string
+	SetQword(path RegPath, valueName string, value uint64) error
+	GetQword(path RegPath, valueName string) (uint64, error)
+	DeleteValue(path RegPath, valueName string) error
+	CreateKey(path RegPath) error
+	DeleteKey(path RegPath) error
+	EnumValues(ath RegPath) []string
 }

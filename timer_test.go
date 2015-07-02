@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/tischda/timer/registry"
 	"io/ioutil"
 	"log"
 	"os"
@@ -9,6 +10,7 @@ import (
 )
 
 var sut timer
+var mock = registry.NewMockRegistry()
 
 func init() {
 	sut = timer{
@@ -19,7 +21,7 @@ func init() {
 
 func TestStart(t *testing.T) {
 	sut.start("t1")
-	actual := mock.timers["t1"]
+	actual := mock.Timers["t1"]
 	if actual == 0 {
 		t.Errorf("Expected: >0, was: %q", actual)
 	}
@@ -37,7 +39,7 @@ func TestStop(t *testing.T) {
 func TestClear(t *testing.T) {
 	sut.start("t3")
 	sut.clear("t3")
-	_, exists := mock.timers["t3"]
+	_, exists := mock.Timers["t3"]
 	if exists {
 		t.Errorf("Expected: false, was: %q", exists)
 	}

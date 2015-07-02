@@ -1,14 +1,15 @@
 // +build windows
 
-package main
+package registry
 
 import (
 	"log"
+	"regexp"
 	"syscall"
 	"unsafe"
 )
 
-type realRegistry struct{}
+type RealRegistry struct{}
 
 // do not reorder
 var hKeyTable = []syscall.Handle{
@@ -22,7 +23,7 @@ var hKeyTable = []syscall.Handle{
 }
 
 // Writes a REG_QWORD (uint64) to the Windows registry.
-func (realRegistry) SetQword(path regPath, valueName string, value uint64) error {
+func (RealRegistry) SetQword(path RegPath, valueName string, value uint64) error {
 	handle := openKey(path, syscall.KEY_SET_VALUE)
 	defer syscall.RegCloseKey(handle)
 
@@ -36,7 +37,7 @@ func (realRegistry) SetQword(path regPath, valueName string, value uint64) error
 }
 
 // Reads a REG_QWORD (uint64) from the Windows registry.
-func (realRegistry) GetQword(path regPath, valueName string) (uint64, error) {
+func (RealRegistry) GetQword(path RegPath, valueName string) (uint64, error) {
 	handle := openKey(path, syscall.KEY_QUERY_VALUE)
 	defer syscall.RegCloseKey(handle)
 
@@ -63,7 +64,7 @@ func (realRegistry) GetQword(path regPath, valueName string) (uint64, error) {
 }
 
 // Deletes a key value from the Windows registry.
-func (realRegistry) DeleteValue(path regPath, valueName string) error {
+func (RealRegistry) DeleteValue(path RegPath, valueName string) error {
 	handle := openKey(path, syscall.KEY_SET_VALUE)
 	defer syscall.RegCloseKey(handle)
 
@@ -71,7 +72,7 @@ func (realRegistry) DeleteValue(path regPath, valueName string) error {
 }
 
 // Creates a key in the Windows registry.
-func (realRegistry) CreateKey(path regPath) error {
+func (RealRegistry) CreateKey(path RegPath) error {
 
 	// handle is required by function call, but not used
 	var handle syscall.Handle
@@ -81,8 +82,8 @@ func (realRegistry) CreateKey(path regPath) error {
 	var d uint32
 
 	return regCreateKeyEx(
-		hKeyTable[path.hKeyIdx],
-		syscall.StringToUTF16Ptr(path.lpSubKey),
+		hKeyTable[path.HKeyIdx],
+		syscall.StringToUTF16Ptr(path.LpSubKey),
 		0,
 		nil,
 		0,
@@ -94,7 +95,7 @@ func (realRegistry) CreateKey(path regPath) error {
 
 // Deletes a key from the Windows registry.  All sub-keys must be
 // deleted before deleting the key, or you will get `access denied`.
-func (realRegistry) DeleteKey(path regPath) error {
+func (RealRegistry) DeleteKey(path RegPath) error {
 	parent, child := splitPathSubkey(path)
 
 	handle := openKey(parent, syscall.KEY_WRITE)
@@ -105,7 +106,7 @@ func (realRegistry) DeleteKey(path regPath) error {
 
 // Enumerates the values for the specified registry key index. The function
 // returns an array of valueNames.
-func (realRegistry) EnumValues(path regPath) []string {
+func (RealRegistry) EnumValues(path RegPath) []string {
 	var values []string
 	name, err := getNextEnumValue(path, uint32(0))
 	for i := 1; err == nil; i++ {
@@ -117,7 +118,7 @@ func (realRegistry) EnumValues(path regPath) []string {
 
 // Enumerates the values for the specified registry key. The function
 // returns one indexed value name for the key each time it is called.
-func getNextEnumValue(path regPath, index uint32) (string, error) {
+func getNextEnumValue(path RegPath, index uint32) (string, error) {
 	handle := openKey(path, syscall.KEY_QUERY_VALUE)
 	defer syscall.RegCloseKey(handle)
 
@@ -140,13 +141,13 @@ func getNextEnumValue(path regPath, index uint32) (string, error) {
 
 // Opens a Windows registry key and returns a handle. You must close
 // the handle with `defer syscall.RegCloseKey(handle)` in the calling code.
-func openKey(path regPath, desiredAccess uint32) syscall.Handle {
+func openKey(path RegPath, desiredAccess uint32) syscall.Handle {
 	var handle syscall.Handle
 
 	// https://msdn.microsoft.com/en-us/library/windows/desktop/ms724897(v=vs.85).aspx
 	err := syscall.RegOpenKeyEx(
-		hKeyTable[path.hKeyIdx],
-		syscall.StringToUTF16Ptr(path.lpSubKey),
+		hKeyTable[path.HKeyIdx],
+		syscall.StringToUTF16Ptr(path.LpSubKey),
 		0,
 		desiredAccess,
 		&handle)
@@ -155,4 +156,11 @@ func openKey(path regPath, desiredAccess uint32) syscall.Handle {
 		log.Fatalln("Cannot open registry path:", path)
 	}
 	return handle
+}
+
+// splits a registry path to parent and child components
+func splitPathSubkey(path RegPath) (RegPath, string) {
+	regexp := regexp.MustCompile(`(.*)\\([^\\]+)$`)
+	parts := regexp.FindStringSubmatch(path.LpSubKey)
+	return RegPath{path.HKeyIdx, parts[1]}, parts[2]
 }

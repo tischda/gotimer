@@ -1,16 +1,16 @@
 // +build windows
-
 package main
 
 import (
 	"flag"
 	"fmt"
+	"github.com/tischda/timer/registry"
 	"io/ioutil"
 	"log"
 	"os"
 )
 
-const version string = "1.1.1"
+const version string = "1.2.0"
 
 func main() {
 	start := flag.String("start", "REQUIRED", "start timer")
@@ -41,9 +41,7 @@ func main() {
 		return
 	}
 
-	t := timer{
-		registry: realRegistry{},
-	}
+	t := timer{registry: registry.MockRegistry{}}
 
 	if !*verbose {
 		log.SetOutput(ioutil.Discard)
