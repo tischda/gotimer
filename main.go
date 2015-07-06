@@ -1,75 +1,98 @@
-// +build windows
 package main
 
 import (
 	"flag"
 	"fmt"
-	"github.com/tischda/timer/registry"
-	"io/ioutil"
 	"log"
 	"os"
+	"text/template"
 )
 
 const version string = "1.2.0"
 
-func main() {
-	start := flag.String("start", "REQUIRED", "start timer")
-	read := flag.String("read", "REQUIRED", "read timer (elapsed time)")
-	stop := flag.String("stop", "REQUIRED", "stop timer and print elapsed time")
-	command := flag.String("C", "REQUIRED", "print elapsed time for command")
-	clear := flag.Bool("clear", false, "clear all timers / uninstall")
-	verbose := flag.Bool("verbose", false, "verbose output")
-	list := flag.Bool("list", false, "list timers")
-	showVersion := flag.Bool("version", false, "print version and exit")
+var t Timer
 
-	// configure logging
-	log.SetFlags(0)
+var process string
+var showVersion bool
 
+type cliCmd struct {
+	CmdName string
+	CmdDesc string
+	CmdFunc func(Timer, string)
+}
+
+var cmdList = []cliCmd{
+	cliCmd{"start", "start timer", Timer.start},
+	cliCmd{"read", "read timer (elapsed time)", Timer.read},
+	cliCmd{"clear", "clear timer", Timer.clear},
+	cliCmd{"stop", "read and then clear timer", Timer.stop},
+	cliCmd{"list", "list timers", Timer.list},
+}
+
+func setUsage() {
+	tmpl, _ := template.New("usage").Parse(`{{range .}}  {{.CmdName}}: {{.CmdDesc}}
+{{end}}
+`)
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [options] name\n  name: name of the timer\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s command name\n       %s option\n\n", os.Args[0], os.Args[0])
+		fmt.Fprintf(os.Stderr, " COMMANDS:\n")
+		tmpl.Execute(os.Stderr, cmdList)
+		fmt.Fprintf(os.Stderr, " OPTIONS:\n")
 		flag.PrintDefaults()
-	}
-	flag.Parse()
-
-	if flag.NFlag() == 0 {
-		flag.Usage()
+		fmt.Fprintf(os.Stderr, "\n")
 		os.Exit(1)
 	}
+}
 
-	if *showVersion {
+func main() {
+
+	// no timestamp in logging
+	log.SetFlags(0)
+
+	flag.StringVar(&process, "C", "REQUIRED", "print elapsed time for process")
+	flag.BoolVar(&showVersion, "version", false, "print version and exit")
+
+	setUsage()
+
+	flag.Parse()
+
+	if showVersion {
 		fmt.Println("timer version", version)
 		return
 	}
 
-	t := timer{registry: registry.MockRegistry{}}
+	processArgs(flag.Arg(0), flag.Arg(1))
+}
 
-	if !*verbose {
-		log.SetOutput(ioutil.Discard)
+func processArgs(cmd string, name string) {
+
+	if flag.NArg() == 0 && flag.NFlag() != 1 {
+		flag.Usage()
 	}
 
-	if *clear {
-		t.clearAll()
+	if cmd == "start" && name == "" {
+		log.Fatalln("Please specify name of timer to start")
 	}
 
-	if *start != "REQUIRED" {
-		t.start(*start)
+	// execute process (http://bit.ly/1dMD2YN)
+	if process != "REQUIRED" {
+		t.process("cmd", "/c", process)
+		return
 	}
 
-	if *read != "REQUIRED" {
-		t.read(*read)
+	i := commandIndex(cmd)
+	if i == -1 {
+		flag.Usage()
 	}
+	// execute command
+	cmdList[i].CmdFunc(t, name)
+}
 
-	if *stop != "REQUIRED" {
-		t.read(*stop)
-		t.clear(*stop)
+func commandIndex(cmdName string) int {
+	for i, item := range cmdList {
+		if item.CmdName == cmdName {
+			return i
+		}
 	}
-
-	if *list {
-		t.list()
-	}
-
-	// http://bit.ly/1dMD2YN
-	if *command != "REQUIRED" {
-		t.process("cmd", "/c", *command)
-	}
+	return -1
 }

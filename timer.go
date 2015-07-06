@@ -10,35 +10,50 @@ import (
 	"time"
 )
 
+var PATH_SOFTWARE = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
+var PATH_TIMERS = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer\timers`}
+
 type timer struct {
 	registry registry.Registry
 }
 
-var PATH_SOFTWARE = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
-var PATH_TIMERS = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer\timers`}
+type Timer interface {
+	start(name string)
+	stop(name string)
+	read(name string)
+	clear(name string)
+	list(name string)
+	process(name string, args ...string)
+}
 
 // Starts the specified timer by creating a registry key containing
 // the number of nanoseconds elapsed since January 1, 1970 UTC (int64).
-func (t *timer) start(name string) {
+func (t timer) start(name string) {
 	log.Println("Starting timer", name)
 	checkFatal(t.registry.CreateKey(PATH_TIMERS))
 	// conversion int64 -> uint64 ok (nanos > 0)
 	checkFatal(t.registry.SetQword(PATH_TIMERS, name, uint64(time.Now().UnixNano())))
 }
 
+// Prints the time elapsed and removes the timer entry
+func (t timer) stop(name string) {
+	t.read(name)
+	t.clear(name)
+}
+
 // Prints the time elapsed since the timer record was created in the registry.
-func (t *timer) read(name string) {
+func (t timer) read(name string) {
 	fmt.Printf("Elapsed time (%s): %s\n", name, t.getDuration(name).String())
 }
 
 // Removes the timer entries from the registry.
-func (t *timer) clear(name string) {
+func (t timer) clear(name string) {
 	checkFatal(t.registry.DeleteValue(PATH_TIMERS, name))
 }
 
 // Reads the timestamp recorded in the registry for this timer and
 // calculates the duration from then to the current time.
-func (t *timer) getDuration(name string) time.Duration {
+func (t timer) getDuration(name string) time.Duration {
 	nanos, err := t.registry.GetQword(PATH_TIMERS, name)
 	checkFatal(err)
 	// conversion uint64 -> int64 ok, since original value was int64
@@ -47,12 +62,12 @@ func (t *timer) getDuration(name string) time.Duration {
 }
 
 // Removes all timers keys from the registry.
-func (t *timer) clearAll() {
+func (t timer) clearAll() {
 	checkFatal(t.registry.DeleteKey(PATH_TIMERS))
 	checkFatal(t.registry.DeleteKey(PATH_SOFTWARE))
 }
 
-func (t *timer) list() {
+func (t timer) list(name string) {
 	timers := t.registry.EnumValues(PATH_TIMERS)
 	if len(timers) > 0 {
 		sort.Strings(timers)
@@ -60,7 +75,7 @@ func (t *timer) list() {
 	}
 }
 
-func (t *timer) process(name string, args ...string) {
+func (t timer) process(name string, args ...string) {
 	defer whenDone()("Total time: %v\n")
 	cmd := exec.Command(name, args...)
 	cmd.Stdout = os.Stdout
