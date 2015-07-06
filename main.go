@@ -51,16 +51,14 @@ func main() {
 
 	flag.StringVar(&process, "C", "REQUIRED", "print elapsed time for process")
 	flag.BoolVar(&showVersion, "version", false, "print version and exit")
+	flag.Parse()
 
 	setUsage()
-
-	flag.Parse()
 
 	if showVersion {
 		fmt.Println("timer version", version)
 		return
 	}
-
 	processArgs(flag.Arg(0), flag.Arg(1))
 }
 
@@ -74,20 +72,25 @@ func processArgs(cmd string, name string) {
 		log.Fatalln("Please specify name of timer to start")
 	}
 
-	// execute process (http://bit.ly/1dMD2YN)
+	// note: './timer start azer -C ls' will ignore flag '-C'
+	// you need to always specify flag before command!
 	if process != "REQUIRED" {
+		// execute process (http://bit.ly/1dMD2YN)
 		t.process("cmd", "/c", process)
 		return
 	}
 
+	// do we understand command?
 	i := commandIndex(cmd)
 	if i == -1 {
 		flag.Usage()
 	}
-	// execute command
+	// ok, then execute command
 	cmdList[i].CmdFunc(t, name)
 }
 
+// check specified command against supported commands
+// and return index if found, or -1 otherwise.
 func commandIndex(cmdName string) int {
 	for i, item := range cmdList {
 		if item.CmdName == cmdName {
