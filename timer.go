@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"sort"
 	"time"
+	"strings"
 )
 
 var PATH_SOFTWARE = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
@@ -101,7 +102,11 @@ func whenDone() func(format string, args ...interface{}) {
 // Print error and exit if err != nil
 func checkFatal(err error) {
 	if err != nil {
-		// TODO: translate "The system cannot find the file specified."
-		log.Fatalln(err)
+		message := err.Error()
+		if strings.Contains(message, "The system cannot find the file specified.") {
+			log.Fatal("The system cannot find the timer specified.")
+		} else {
+			log.Fatalln(err)
+		}
 	}
 }

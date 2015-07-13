@@ -36,7 +36,6 @@ test_script:
   - timer.exe stop t1
   - timer.exe clear
   - timer.exe exec "dir *.exe"
-  - timer.exe help
 
 artifacts:
   - path: timer.exe

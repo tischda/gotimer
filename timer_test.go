@@ -57,7 +57,7 @@ func TestList(t *testing.T) {
 }
 
 func TestExec(t *testing.T) {
-	// TODO: write a sleeper that allows fractional numbers
+	// TODO: write a sleeper that allows fractional numbers, eg. 0.1
 	// TODO: expected := `Total time: 1\d\d.\d*ms`
 
 	expected := `Total time: 1.\d*s`
