@@ -19,6 +19,7 @@ install:
   - mkdir %GOPATH%
   - go get -u golang.org/x/tools/cmd/cover
   - go get -u github.com/tischda/go2xunit
+  - go get -u github.com/tischda/timer/registry
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
