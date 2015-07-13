@@ -23,35 +23,38 @@ go get github.com/tischda/timer
 
 
 ~~~
-Usage: timer [options] name
-  name: name of the timer
-  -C="REQUIRED": print elapsed time for command
-  -clear=false: clear all timers / uninstall
-  -list=false: list timers
-  -read="REQUIRED": read timer (elapsed time)
-  -start="REQUIRED": start timer
-  -stop="REQUIRED": stop timer and print elapsed time
-  -verbose=false: verbose output
+Usage: timer [option] command name
+ COMMANDS:
+  start: start timer
+  read: read timer (elapsed time)
+  stop: read and then clear timer
+  list: list timers
+  clear: clear all timers
+  exec: execute process and print elapsed time
+
+ OPTIONS:
+  -quiet=false: hide process output
   -version=false: print version and exit
 ~~~
 
 Example:
 
 ~~~
-U:\src\timer>timer -start t1 -verbose
-Starting timer t1
-
-U:\src\timer>timer -read t1
+U:\src\timer>timer start t1
+U:\src\timer>timer read t1
 Elapsed time (t1): 5.9200225s
 
-U:\src\timer>timer -start t2 -read t1
-Elapsed time (t1): 56.3191111s
+U:\src\timer>timer start t2
+U:\src\timer>timer list
+[t1 t2]
 
-U:\src\timer>timer -start t3 -read t1 -stop t2
+U:\src\timer>timer stop t1
 Elapsed time (t1): 1m30.6471884s
-Elapsed time (t2): 34.3280773s
 
-U:\src\timer>timer -clear
+U:\src\timer>timer clear
+
+U:\src\timer>timer exec "sleep 1"
+Total time: 1.012991807s
 ~~~
 
 ### Other timers

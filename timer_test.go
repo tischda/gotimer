@@ -3,25 +3,24 @@ package main
 import (
 	"github.com/tischda/timer/registry"
 	"io/ioutil"
-	"log"
 	"os"
 	"testing"
 	"time"
+	"regexp"
 )
 
-var sut timer
-var mock = registry.NewMockRegistry()
+var sut theTimer
+var mockRegistry = registry.NewMockRegistry()
 
 func init() {
-	sut = timer{
-		registry: mock,
+	sut = theTimer{
+		registry: mockRegistry,
 	}
-	log.SetOutput(ioutil.Discard)
 }
 
 func TestStart(t *testing.T) {
 	sut.start("t1")
-	actual := mock.Timers["t1"]
+	actual := mockRegistry.Timers["t1"]
 	if actual == 0 {
 		t.Errorf("Expected: >0, was: %q", actual)
 	}
@@ -39,7 +38,7 @@ func TestStop(t *testing.T) {
 func TestClear(t *testing.T) {
 	sut.start("t3")
 	sut.clear("t3")
-	_, exists := mock.Timers["t3"]
+	_, exists := mockRegistry.Timers["t3"]
 	if exists {
 		t.Errorf("Expected: false, was: %q", exists)
 	}
@@ -51,18 +50,17 @@ func TestList(t *testing.T) {
 	sut.start("t2")
 
 	expected := "[t1 t2]\n"
-	actual := captureOutput(sut.list)
+	actual := captureOutput(func() { sut.list("") })
 	if actual != expected {
 		t.Errorf("Expected: %q, was: %q", expected, actual)
 	}
 }
 
-func TestProcess(t *testing.T) {
-	expected := "Total time: 1."
-	actual := captureOutput(func() {
-		sut.process("sleep", "1")
-	})[:len(expected)]
-	if actual != expected {
+func TestExec(t *testing.T) {
+	expected := `Total time: 1\d\d.\d*ms`
+	r, _ := regexp.Compile(expected)
+	actual := captureOutput(func() { sut.exec("sleep 0.1") })
+	if !r.MatchString(actual) {
 		t.Errorf("Expected: %q, was: %q", expected, actual)
 	}
 }

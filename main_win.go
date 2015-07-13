@@ -5,5 +5,7 @@ package main
 import "github.com/tischda/timer/registry"
 
 func init() {
-	t = timer{registry: registry.RealRegistry()}
+	shell = "cmd"
+	shellCmdFlag = "/c"
+	timer = theTimer{registry: registry.RealRegistry()}
 }
