@@ -1,0 +1,19 @@
+c:\src\go-private\src\github.com\tischda\timer>timer start t£
+
+c:\src\go-private\src\github.com\tischda\timer>timer list
+[t£]
+
+c:\src\go-private\src\github.com\tischda\timer>timer start t*
+
+c:\src\go-private\src\github.com\tischda\timer>timer list
+[t* t£]
+
+c:\src\go-private\src\github.com\tischda\timer>timer clear
+The system cannot find the file specified.
+
+c:\src\go-private\src\github.com\tischda\timer>timer list
+[t* t£]
+
+TODO: empty list --> no timers
+      cannot find the file --> cannot find the timer
+      fix bugs
