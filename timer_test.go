@@ -4,9 +4,9 @@ import (
 	"github.com/tischda/timer/registry"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"testing"
 	"time"
-	"regexp"
 )
 
 var sut theTimer
@@ -57,9 +57,13 @@ func TestList(t *testing.T) {
 }
 
 func TestExec(t *testing.T) {
-	expected := `Total time: 1\d\d.\d*ms`
+	// TODO: write a sleeper that allows fractional numbers
+	// TODO: expected := `Total time: 1\d\d.\d*ms`
+
+	expected := `Total time: 1.\d*s`
 	r, _ := regexp.Compile(expected)
-	actual := captureOutput(func() { sut.exec("sleep 0.1") })
+
+	actual := captureOutput(func() { sut.exec("sleep 1") })
 	if !r.MatchString(actual) {
 		t.Errorf("Expected: %q, was: %q", expected, actual)
 	}
