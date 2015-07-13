@@ -1,19 +1,6 @@
-c:\src\go-private\src\github.com\tischda\timer>timer start t£
 
-c:\src\go-private\src\github.com\tischda\timer>timer list
-[t£]
+TODO:
 
-c:\src\go-private\src\github.com\tischda\timer>timer start t*
-
-c:\src\go-private\src\github.com\tischda\timer>timer list
-[t* t£]
-
-c:\src\go-private\src\github.com\tischda\timer>timer clear
-The system cannot find the file specified.
-
-c:\src\go-private\src\github.com\tischda\timer>timer list
-[t* t£]
-
-TODO: empty list --> no timers
-      cannot find the file --> cannot find the timer
-      fix bugs
+- empty list --> no timers
+- remove extra newline when printing usage on windows
+- sleep command not available on windows
