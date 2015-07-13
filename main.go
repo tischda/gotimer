@@ -64,8 +64,7 @@ func processArgs(cmd string, name string) {
 
 func setUsage() {
 	tpl, _ := template.New("usage").Parse(`{{range .}}  {{.CmdName}}: {{.CmdDesc}}
-{{end}}
-`)
+{{end}}`)
 	flag.Usage = func() {
 		fmt.Fprintf(stderr, "Usage: %s [option] command name\n", os.Args[0])
 		fmt.Fprintf(stderr, " COMMANDS:\n")
