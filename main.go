@@ -31,7 +31,7 @@ var cmdList = []cliCmd{
 	cliCmd{"read", "read timer (elapsed time)", Timer.read},
 	cliCmd{"stop", "read and then clear timer", Timer.stop},
 	cliCmd{"list", "list timers", Timer.list},
-	cliCmd{"clear", "clear all timers", Timer.clear},
+	cliCmd{"clear", "clear timer. Empty = uninstall", Timer.clear},
 	cliCmd{"exec", "execute process and print elapsed time", Timer.exec},
 }
 
@@ -81,8 +81,12 @@ func checkParameters(cmd string, name string) {
 	if flag.NArg() == 0 || flag.NArg() > 2 {
 		flag.Usage()
 	}
-	if (cmd == "start" || cmd == "read" || cmd == "stop" || cmd == "exec") && name == "" {
-		fmt.Fprintf(stderr, "Please specify name of timer\n")
+	if (cmd == "start" || cmd == "read" || cmd == "stop") && name == "" {
+		fmt.Fprintf(stderr, "Please specify the name of a timer.\n")
+		os.Exit(1)
+	}
+	if cmd == "exec" && name == "" {
+		fmt.Fprintf(stderr, "Please specify a process to execute.\n")
 		os.Exit(1)
 	}
 }
