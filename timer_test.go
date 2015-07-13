@@ -45,7 +45,7 @@ func TestClear(t *testing.T) {
 }
 
 func TestList(t *testing.T) {
-	sut.clearAll()
+	sut.clear("")
 	sut.start("t1")
 	sut.start("t2")
 

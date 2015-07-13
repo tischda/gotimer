@@ -46,9 +46,15 @@ func (t *theTimer) read(name string) {
 	fmt.Printf("Elapsed time (%s): %s\n", name, t.getDuration(name).String())
 }
 
-// Removes the timer entries from the registry.
+// Removes the timer entry from the registry.
+// If none specified, clears all timers.
 func (t *theTimer) clear(name string) {
-	checkFatal(t.registry.DeleteValue(PATH_TIMERS, name))
+	if name != "" {
+		checkFatal(t.registry.DeleteValue(PATH_TIMERS, name))
+	} else {
+		checkFatal(t.registry.DeleteKey(PATH_TIMERS))
+		checkFatal(t.registry.DeleteKey(PATH_SOFTWARE))
+	}
 }
 
 func (t *theTimer) list(name string) {
@@ -84,12 +90,6 @@ func (t *theTimer) getDuration(name string) time.Duration {
 	return time.Since(start)
 }
 
-// Removes all timers keys from the registry.
-func (t *theTimer) clearAll() {
-	checkFatal(t.registry.DeleteKey(PATH_TIMERS))
-	checkFatal(t.registry.DeleteKey(PATH_SOFTWARE))
-}
-
 // Callback function executed when process is done
 func whenDone() func(format string, args ...interface{}) {
 	start := time.Now()
@@ -101,6 +101,7 @@ func whenDone() func(format string, args ...interface{}) {
 // Print error and exit if err != nil
 func checkFatal(err error) {
 	if err != nil {
+		// TODO: translate "The system cannot find the file specified."
 		log.Fatalln(err)
 	}
 }
