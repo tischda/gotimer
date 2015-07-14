@@ -23,13 +23,15 @@ go get github.com/tischda/timer
 
 ~~~
 Usage: ./timer [option] command name
+
  COMMANDS:
   start: start timer
   read: read timer (elapsed time)
   stop: read and then clear timer
   list: list timers
-  clear: clear timer. Empty = uninstall
+  clear: clear timer, name empty = uninstall
   exec: execute process and print elapsed time
+
  OPTIONS:
   -quiet=false: hide process output
   -version=false: print version and exit

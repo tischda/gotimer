@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"text/template"
-	"log"
 )
 
 const version string = "1.2.0"
@@ -26,7 +26,7 @@ var cmdList = []cliCmd{
 	cliCmd{"read", "read timer (elapsed time)", Chronometer.read},
 	cliCmd{"stop", "read and then clear timer", Chronometer.stop},
 	cliCmd{"list", "list timers", Chronometer.list},
-	cliCmd{"clear", "clear timer. Empty = uninstall", Chronometer.clear},
+	cliCmd{"clear", "clear timer, name empty = uninstall", Chronometer.clear},
 	cliCmd{"exec", "execute process and print elapsed time", Chronometer.exec},
 }
 
@@ -62,11 +62,10 @@ func setUsage() {
 {{end}}`)
 	flag.Usage = func() {
 		fmt.Fprintf(stderr, "Usage: %s [option] command name\n", os.Args[0])
-		fmt.Fprintf(stderr, " COMMANDS:\n")
+		fmt.Fprintf(stderr, "\n COMMANDS:\n")
 		tpl.Execute(stderr, cmdList)
-		fmt.Fprintf(stderr, " OPTIONS:\n")
+		fmt.Fprintf(stderr, "\n OPTIONS:\n")
 		flag.PrintDefaults()
-		fmt.Fprintf(stderr, "\n")
 		os.Exit(1)
 	}
 }
