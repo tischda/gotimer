@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-var sut regTimer
+var sut Timer
 var mockRegistry = registry.NewMockRegistry()
 
 func init() {
-	sut = regTimer{
+	sut = Timer{
 		registry: mockRegistry,
 	}
 }

@@ -1,6 +1,6 @@
 package main
 
-type MockTimer struct {
+type mockTimer struct {
 	name        string
 	startCalled bool
 	stopCalled  bool
@@ -10,26 +10,26 @@ type MockTimer struct {
 	execCalled  bool
 }
 
-func (t *MockTimer) start(name string) {
+func (t *mockTimer) start(name string) {
 	t.startCalled = true
 }
 
-func (t *MockTimer) stop(name string) {
+func (t *mockTimer) stop(name string) {
 	t.stopCalled = true
 }
 
-func (t *MockTimer) read(name string) {
+func (t *mockTimer) read(name string) {
 	t.readCalled = true
 }
 
-func (t *MockTimer) clear(name string) {
+func (t *mockTimer) clear(name string) {
 	t.clearCalled = true
 }
 
-func (t *MockTimer) list(name string) {
+func (t *mockTimer) list(name string) {
 	t.listCalled = true
 }
 
-func (t *MockTimer) exec(process string) {
+func (t *mockTimer) exec(process string) {
 	t.execCalled = true
 }

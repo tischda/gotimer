@@ -14,4 +14,4 @@ const shellCmdFlag = "-c"
 const execTestCmd = "sleep 0.1"
 const execTestRxp = `Total time: 1\d\d.\d*ms`
 
-var timer Chronometer = &regTimer{registry: registry.NewMockRegistry()}
+var timer Chronometer = &Timer{registry: registry.NewMockRegistry()}

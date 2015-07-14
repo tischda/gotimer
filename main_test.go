@@ -40,7 +40,7 @@ func TestUsage(t *testing.T) {
 }
 
 func TestParams(t *testing.T) {
-	mockTimer := MockTimer{}
+	mockTimer := mockTimer{}
 	timer = &mockTimer
 	init_args := os.Args
 
