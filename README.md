@@ -40,21 +40,21 @@ Usage: ./timer [option] command name
 Example:
 
 ~~~
-U:\src\timer>timer start t1
-U:\src\timer>timer read t1
+C:\>timer start t1
+C:\>timer read t1
 Elapsed time (t1): 5.9200225s
 
-U:\src\timer>timer start t2
-U:\src\timer>timer list
+C:\>timer start t2
+C:\>timer list
 [t1 t2]
 
-U:\src\timer>timer stop t1
+C:\>timer stop t1
 Elapsed time (t1): 1m30.6471884s
 
-U:\src\timer>timer clear
+C:\>timer clear
 
-U:\src\timer>timer exec "sleep 1"
-Total time: 1.012991807s
+C:\>timer -quiet exec "dir /s"
+Total time: 91.2001ms
 ~~~
 
 ### Other timers
