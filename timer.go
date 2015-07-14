@@ -84,15 +84,13 @@ func (t *Timer) exec(process string) {
 
 // Reads the timestamp recorded in the registry for this timer and
 // calculates the duration from then to the current time.
-
-// TODO: small delay added by registry lookup. Should stop timer immediately.
-// cf. https://golang.org/src/time/sleep_test.go
 func (t *Timer) getDuration(name string) time.Duration {
+	t1 := time.Now()
 	nanos, err := t.registry.GetQword(PATH_TIMERS, name)
 	checkFatal(err)
 	// conversion uint64 -> int64 ok, since original value was int64
-	start := time.Unix(0, int64(nanos))
-	return time.Since(start)
+	t0 := time.Unix(0, int64(nanos))
+	return t1.Sub(t0)
 }
 
 // Callback function executed when process is done

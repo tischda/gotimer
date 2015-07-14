@@ -1,5 +1,11 @@
 ## Changelog
  
+##### timer 1.2.0 - (14 July 2015)
+
+    * Replaced flags by commands
+    * More consistent log output
+ 
+ 
 ##### timer 1.1.1 - (11 June 2015)
 
     * Refactored registry internals
