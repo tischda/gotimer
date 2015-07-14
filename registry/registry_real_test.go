@@ -4,7 +4,7 @@ package registry
 
 import "testing"
 
-var registry Registry = realRegistry{}
+var registry Registry = RealRegistry{}
 
 func TestSplit(t *testing.T) {
 	expected_path := RegPath{HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
