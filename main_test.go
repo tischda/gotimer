@@ -39,6 +39,7 @@ func TestUsage(t *testing.T) {
 	}
 }
 
+// Tests that specified actions call corresponding functions.
 func TestParams(t *testing.T) {
 	mockTimer := mockTimer{}
 	timer = &mockTimer

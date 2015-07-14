@@ -64,7 +64,7 @@ func TestExec(t *testing.T) {
 	}
 }
 
-// captures Stdout and returns output of function f()
+// Captures Stdout and returns output of function f()
 func captureOutput(f func()) string {
 	// redirect output
 	old := os.Stdout

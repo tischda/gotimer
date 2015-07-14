@@ -36,7 +36,7 @@ func (t *Timer) start(name string) {
 	checkFatal(t.registry.SetQword(PATH_TIMERS, name, uint64(time.Now().UnixNano())))
 }
 
-// Prints the time elapsed and removes the timer entry
+// Prints the time elapsed and removes the timer entry.
 func (t *Timer) stop(name string) {
 	t.read(name)
 	t.clear(name)
@@ -58,7 +58,7 @@ func (t *Timer) clear(name string) {
 	}
 }
 
-// List all started timers
+// Lists all started timers.
 func (t *Timer) list(name string) {
 	timers := t.registry.EnumValues(PATH_TIMERS)
 	if len(timers) > 0 {
@@ -69,7 +69,7 @@ func (t *Timer) list(name string) {
 	}
 }
 
-// Execute process and print elapsed time
+// Executes process and print elapsed time.
 func (t *Timer) exec(process string) {
 	defer whenDone()("Total time: %v\n")
 
@@ -93,7 +93,7 @@ func (t *Timer) getDuration(name string) time.Duration {
 	return t1.Sub(t0)
 }
 
-// Callback function executed when process is done
+// Callback function executed when process is done.
 func whenDone() func(format string, args ...interface{}) {
 	start := time.Now()
 	return func(format string, args ...interface{}) {
@@ -101,7 +101,7 @@ func whenDone() func(format string, args ...interface{}) {
 	}
 }
 
-// Print error and exit if err != nil
+// Prints error and exit if err != nil
 func checkFatal(err error) {
 	if err != nil {
 		message := err.Error()

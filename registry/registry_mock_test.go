@@ -2,8 +2,4 @@
 
 package registry
 
-var registry Registry
-
-func init() {
-	registry = NewMockRegistry()
-}
+var registry Registry = NewMockRegistry()
