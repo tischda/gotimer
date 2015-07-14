@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-var sut theTimer
+var sut regTimer
 var mockRegistry = registry.NewMockRegistry()
 
 func init() {
-	sut = theTimer{
+	sut = regTimer{
 		registry: mockRegistry,
 	}
 }
@@ -57,15 +57,10 @@ func TestList(t *testing.T) {
 }
 
 func TestExec(t *testing.T) {
-	// TODO: write a sleeper that allows fractional numbers, eg. 0.1
-	// TODO: expected := `Total time: 1\d\d.\d*ms`
-
-	expected := `Total time: 1.\d*s`
-	r, _ := regexp.Compile(expected)
-
-	actual := captureOutput(func() { sut.exec("sleep 1") })
+	r, _ := regexp.Compile(execTestRxp)
+	actual := captureOutput(func() { sut.exec(execTestCmd) })
 	if !r.MatchString(actual) {
-		t.Errorf("Expected: %q, was: %q", expected, actual)
+		t.Errorf("Expected: %q, was: %q", execTestRxp, actual)
 	}
 }
 

@@ -14,12 +14,11 @@ import (
 var PATH_SOFTWARE = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
 var PATH_TIMERS = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer\timers`}
 
-// TODO: naming of type and interface, what is best practice ?
-type theTimer struct {
+type regTimer struct {
 	registry registry.Registry
 }
 
-type Timer interface {
+type Chronometer interface {
 	start(name string)
 	stop(name string)
 	read(name string)
@@ -30,26 +29,26 @@ type Timer interface {
 
 // Starts the specified timer by creating a registry key containing
 // the number of nanoseconds elapsed since January 1, 1970 UTC (int64).
-func (t *theTimer) start(name string) {
+func (t *regTimer) start(name string) {
 	checkFatal(t.registry.CreateKey(PATH_TIMERS))
 	// conversion int64 -> uint64 ok (nanos > 0)
 	checkFatal(t.registry.SetQword(PATH_TIMERS, name, uint64(time.Now().UnixNano())))
 }
 
 // Prints the time elapsed and removes the timer entry
-func (t *theTimer) stop(name string) {
+func (t *regTimer) stop(name string) {
 	t.read(name)
 	t.clear(name)
 }
 
 // Prints the time elapsed since the timer record was created in the registry.
-func (t *theTimer) read(name string) {
+func (t *regTimer) read(name string) {
 	fmt.Printf("Elapsed time (%s): %s\n", name, t.getDuration(name).String())
 }
 
 // Removes the timer entry from the registry.
 // If none specified, clears all timers.
-func (t *theTimer) clear(name string) {
+func (t *regTimer) clear(name string) {
 	if name != "" {
 		checkFatal(t.registry.DeleteValue(PATH_TIMERS, name))
 	} else {
@@ -58,7 +57,7 @@ func (t *theTimer) clear(name string) {
 	}
 }
 
-func (t *theTimer) list(name string) {
+func (t *regTimer) list(name string) {
 	timers := t.registry.EnumValues(PATH_TIMERS)
 	if len(timers) > 0 {
 		sort.Strings(timers)
@@ -66,7 +65,7 @@ func (t *theTimer) list(name string) {
 	}
 }
 
-func (t *theTimer) exec(process string) {
+func (t *regTimer) exec(process string) {
 	defer whenDone()("Total time: %v\n")
 
 	// execute process (http://bit.ly/1dMD2YN)
@@ -81,9 +80,9 @@ func (t *theTimer) exec(process string) {
 // Reads the timestamp recorded in the registry for this timer and
 // calculates the duration from then to the current time.
 
-// TODO: small delay added by registry lookup. Should stop timer immediately
-// and then lookup.
-func (t *theTimer) getDuration(name string) time.Duration {
+// TODO: small delay added by registry lookup. Should stop timer immediately.
+// cf. https://golang.org/src/time/sleep_test.go
+func (t *regTimer) getDuration(name string) time.Duration {
 	nanos, err := t.registry.GetQword(PATH_TIMERS, name)
 	checkFatal(err)
 	// conversion uint64 -> int64 ok, since original value was int64

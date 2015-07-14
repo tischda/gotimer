@@ -3,4 +3,5 @@ TODO:
 
 - empty list --> no timers
 - remove extra newline when printing usage on windows
-- sleep command not available on windows
+- sleep command not available on windows, build one
+- type/interface naming (chronograph ?)

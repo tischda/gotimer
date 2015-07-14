@@ -3,36 +3,31 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"text/template"
+	"log"
 )
 
 const version string = "1.2.0"
 
-var shell, shellCmdFlag string
-
-var timer Timer
-
 var showVersion bool
 var quietProcess bool
 
-var stdout = os.Stdout
 var stderr = os.Stderr
 
 type cliCmd struct {
 	CmdName string
 	CmdDesc string
-	CmdFunc func(Timer, string)
+	CmdFunc func(Chronometer, string)
 }
 
 var cmdList = []cliCmd{
-	cliCmd{"start", "start timer", Timer.start},
-	cliCmd{"read", "read timer (elapsed time)", Timer.read},
-	cliCmd{"stop", "read and then clear timer", Timer.stop},
-	cliCmd{"list", "list timers", Timer.list},
-	cliCmd{"clear", "clear timer. Empty = uninstall", Timer.clear},
-	cliCmd{"exec", "execute process and print elapsed time", Timer.exec},
+	cliCmd{"start", "start timer", Chronometer.start},
+	cliCmd{"read", "read timer (elapsed time)", Chronometer.read},
+	cliCmd{"stop", "read and then clear timer", Chronometer.stop},
+	cliCmd{"list", "list timers", Chronometer.list},
+	cliCmd{"clear", "clear timer. Empty = uninstall", Chronometer.clear},
+	cliCmd{"exec", "execute process and print elapsed time", Chronometer.exec},
 }
 
 // define flags in init() otherwise you'll get "panic: flag redefined"
