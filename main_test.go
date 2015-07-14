@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// Inspired from https://talks.golang.org/2014/testing.slide#23
+// Inspired by https://talks.golang.org/2014/testing.slide#23
 func TestUsage(t *testing.T) {
 
 	if os.Getenv("BE_CRASHER") == "1" {
