@@ -23,12 +23,12 @@ install:
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - go build -o timer.exe
+  - go build -ldflags "-s" -o timer.exe
 
 test_script:
+  - timer.exe -version
   - go test -v -cover
   - go test -v | go2xunit -xunitnet > xunit-report.xml
-  - timer.exe -version
   - timer.exe start t1
   - timer.exe read t1
   - timer.exe start t2
