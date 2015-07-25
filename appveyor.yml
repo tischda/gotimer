@@ -23,7 +23,7 @@ install:
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - go build -ldflags "-s" -o timer.exe
+  - build.bat
 
 test_script:
   - timer.exe -version
