@@ -16,7 +16,7 @@ Data is the number of nanoseconds elapsed since January 1, 1970 UTC.
 There are no dependencies.
 
 ~~~
-go get github.com/tischda/timer
+go get github.com/tischda/gotimer
 ~~~
 
 ### Usage
@@ -40,20 +40,20 @@ Usage: ./gotimer [option] command name
 Example:
 
 ~~~
-C:\>timer start t1
-C:\>timer read t1
+C:\>gotimer start t1
+C:\>gotimer read t1
 Elapsed time (t1): 5.9200225s
 
-C:\>timer start t2
-C:\>timer list
+C:\>gotimer start t2
+C:\>gotimer list
 [t1 t2]
 
-C:\>timer stop t1
+C:\>gotimer stop t1
 Elapsed time (t1): 1m30.6471884s
 
-C:\>timer clear
+C:\>gotimer clear
 
-C:\>timer -quiet exec "dir /s"
+C:\>gotimer -quiet exec "dir /s"
 Total time: 91.2001ms
 ~~~
 
