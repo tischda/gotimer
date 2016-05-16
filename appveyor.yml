@@ -24,19 +24,19 @@ build_script:
   - go build -ldflags "-X main.version=%version% -s"
 
 test_script:
-  - timer.exe -version
+  - gotimer.exe -version
   - go test -v -cover
   - go test -v | go2xunit -xunitnet > xunit-report.xml
-  - timer.exe start t1
-  - timer.exe read t1
-  - timer.exe start t2
-  - timer.exe list
-  - timer.exe stop t1
-  - timer.exe clear
-  - timer.exe exec "dir *.exe"
+  - gotimer.exe start t1
+  - gotimer.exe read t1
+  - gotimer.exe start t2
+  - gotimer.exe list
+  - gotimer.exe stop t1
+  - gotimer.exe clear
+  - gotimer.exe exec "dir *.exe"
 
 artifacts:
-  - path: timer.exe
+  - path: gotimer.exe
     name: Timer
 
 deploy: off
