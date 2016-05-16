@@ -104,6 +104,6 @@ func TestIndexOf(t *testing.T) {
 
 func assertEquals(t *testing.T, expected int, actual int) {
 	if actual != expected {
-		t.Errorf("Expected: %s, but was: %s", expected, actual)
+		t.Errorf("Expected: %d, but was: %d", expected, actual)
 	}
 }

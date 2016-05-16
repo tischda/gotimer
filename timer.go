@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/tischda/timer/registry"
+	"github.com/tischda/gotimer/registry"
 	"log"
 	"os"
 	"os/exec"

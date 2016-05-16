@@ -2,7 +2,7 @@
 
 package main
 
-import "github.com/tischda/timer/registry"
+import "github.com/tischda/gotimer/registry"
 
 // The following variables are compiled for windows only
 

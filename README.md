@@ -1,4 +1,4 @@
-﻿# timer [![Build status](https://ci.appveyor.com/api/projects/status/au8q12tabnam2t9a?svg=true)](https://ci.appveyor.com/project/tischda/timer)
+﻿# gotimer [![Build status](https://ci.appveyor.com/api/projects/status/au8q12tabnam2t9a?svg=true)](https://ci.appveyor.com/project/tischda/timer)
 
 Windows utility written in [Go](https://www.golang.org) to measure the time between two events.
 Timers are persisted in the Windows registry:
@@ -22,7 +22,7 @@ go get github.com/tischda/timer
 ### Usage
 
 ~~~
-Usage: ./timer [option] command name
+Usage: ./gotimer [option] command name
 
  COMMANDS:
   start: start timer

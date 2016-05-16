@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/tischda/timer/registry"
+	"github.com/tischda/gotimer/registry"
 	"io/ioutil"
 	"os"
 	"regexp"
