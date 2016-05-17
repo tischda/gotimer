@@ -45,7 +45,7 @@ func main() {
 	flag.Parse()
 
 	if showVersion {
-		fmt.Println("timer version", version)
+		fmt.Println("gotimer version", version)
 	} else {
 		processArgs(flag.Arg(0), flag.Arg(1))
 	}
