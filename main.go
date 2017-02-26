@@ -9,7 +9,7 @@ import (
 )
 
 // http://technosophos.com/2014/06/11/compile-time-string-in-go.html
-// go build -ldflags "-x main.version $(git describe --tags)"
+// go build -ldflags "-x main.version=$(git describe --tags)"
 var version string
 
 // command line flags
@@ -65,9 +65,9 @@ func setCustomUsage() {
 {{end}}`)
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [option] command name\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "\n COMMANDS:\n")
+		fmt.Fprint(os.Stderr, "\n COMMANDS:\n")
 		tpl.Execute(os.Stderr, cmdList)
-		fmt.Fprintf(os.Stderr, "\n OPTIONS:\n")
+		fmt.Fprint(os.Stderr, "\n OPTIONS:\n")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -79,11 +79,11 @@ func checkParameters(cmd string, name string) {
 		flag.Usage()
 	}
 	if (cmd == "start" || cmd == "read" || cmd == "stop") && name == "" {
-		fmt.Fprintf(os.Stderr, "Please specify the name of a timer.\n")
+		fmt.Fprint(os.Stderr, "Please specify the name of a timer.\n")
 		os.Exit(1)
 	}
 	if cmd == "exec" && name == "" {
-		fmt.Fprintf(os.Stderr, "Please specify a process to execute.\n")
+		fmt.Fprint(os.Stderr, "Please specify a process to execute.\n")
 		os.Exit(1)
 	}
 }

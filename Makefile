@@ -15,7 +15,7 @@ build: get
 get:
 	go get
 
-test: fmt vet
+test: vet
 	go test -v -cover
 
 cover:
