@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"testing"
 	"time"
+	"strconv"
 )
 
 var sut Timer
@@ -40,7 +41,7 @@ func TestClear(t *testing.T) {
 	sut.clear("t3")
 	_, exists := mockRegistry.Timers["t3"]
 	if exists {
-		t.Errorf("Expected: false, was: %q", exists)
+		t.Errorf("Expected: false, was: %q", strconv.FormatBool(exists))
 	}
 }
 
