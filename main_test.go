@@ -26,7 +26,7 @@ func TestUsage(t *testing.T) {
 
 	// check return code
 	if e, ok := err.(*exec.ExitError); ok && e.Success() {
-		t.Fatalf("Exptected exit status 1, but was: %v, ", err)
+		t.Fatalf("Expected exit status 1, but was: %v, ", err)
 	}
 
 	// now check that Usage message is displayed
