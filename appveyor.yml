@@ -2,10 +2,12 @@ branches:
   only:
     - master
 
-os: Windows Server 2012 R2
+image: Visual Studio 2019
 
 environment:
   GOPATH: c:\gopath
+  GO111MODULE: on
+  GOPROXY: https://proxy.golang.org  
 
 init:
   - SET PATH=%GOPATH%\bin;%PATH%
