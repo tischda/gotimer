@@ -49,10 +49,7 @@ func (t *Timer) read(name string) {
 	if name != "" {
 		values = append(values, name)
 	} else {
-		if timers, err := t.registry.EnumValues(PATH_TIMERS); err == nil && len(timers) > 0 {
-			sort.Strings(timers)
-			values = timers
-		}
+		values = t.getTimersSorted()
 	}
 	if len(values) > 0 {
 		for _, v := range values {
@@ -76,16 +73,25 @@ func (t *Timer) clear(name string) {
 }
 
 // Lists all started timers.
+// TODO: The parameter 'name' is not not used, it's the generic signature required by executeTimerFunc()
 func (t *Timer) list(name string) {
-	if timers, err := t.registry.EnumValues(PATH_TIMERS); err == nil && len(timers) > 0 {
-		sort.Strings(timers)
+	if timers := t.getTimersSorted(); len(timers) > 0 {
 		fmt.Println(timers)
 	} else {
 		fmt.Println("No timers.")
 	}
 }
 
-// Executes process and print elapsed time.
+// Returns sorted list of timers
+func (t *Timer) getTimersSorted() (timers []string) {
+	var err error
+	if timers, err = t.registry.EnumValues(PATH_TIMERS); err == nil && len(timers) > 0 {
+		sort.Strings(timers)
+	}
+	return
+}
+
+// Executes process and prints elapsed time.
 func (t *Timer) exec(process string) {
 	defer whenDone()("Total time: %v\n")
 

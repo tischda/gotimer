@@ -65,6 +65,7 @@ func processArgs(cmd string, name string) {
 // Custom flag.Usage() function.
 func customUsage() {
 	fmt.Fprintf(os.Stderr, "Usage: %s [OPTION] exec task\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "Usage: %s {list,read,clear}\n", os.Args[0])
 	fmt.Fprintf(os.Stderr, "       %s [OPTION] COMMAND timer-name\n", os.Args[0])
 	fmt.Fprint(os.Stderr, "\n COMMANDS:\n")
 	tpl, _ := template.New("usage").Parse(USAGE_TEMPLATE)
