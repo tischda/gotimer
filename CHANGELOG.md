@@ -1,4 +1,8 @@
 ## Changelog
+
+##### gotimer 1.2.1 - (? November 2021)
+
+    * Improve usage output
  
 ##### gotimer 1.2.0 - (14 July 2015)
 

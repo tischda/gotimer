@@ -13,31 +13,32 @@ Data is the number of nanoseconds elapsed since January 1, 1970 UTC.
 
 ### Install
 
-There are no dependencies.
-
 ~~~
-go get github.com/tischda/gotimer
+go install github.com/tischda/gotimer
 ~~~
 
 ### Usage
 
 ~~~
-Usage: ./gotimer [option] command name
+Usage: gotimer [OPTION] exec task
+       gotimer [OPTION] COMMAND timer-name
 
  COMMANDS:
-  start: start timer
+  start: start named timer
   read: read timer (elapsed time)
   stop: read and then clear timer
   list: list timers
   clear: clear timer, name empty = uninstall
-  exec: execute process and print elapsed time
+  exec: execute task and print elapsed time
 
  OPTIONS:
-  -quiet=false: hide process output
-  -version=false: print version and exit
+  -quiet
+        hide process output
+  -version
+        print version and exit
 ~~~
 
-Example:
+Examples:
 
 ~~~
 C:\>gotimer start t1

@@ -23,14 +23,17 @@ type cliCmd struct {
 	CmdFunc func(Chronometer, string)
 }
 
+const USAGE_TEMPLATE = `{{range .}}  {{.CmdName}}: {{.CmdDesc}}
+{{end}}`
+
 // list of permitted commands with description and func pointer
 var cmdList = []cliCmd{
-	cliCmd{"start", "start timer", Chronometer.start},
-	cliCmd{"read", "read timer (elapsed time)", Chronometer.read},
-	cliCmd{"stop", "read and then clear timer", Chronometer.stop},
-	cliCmd{"list", "list timers", Chronometer.list},
-	cliCmd{"clear", "clear timer, name empty = uninstall", Chronometer.clear},
-	cliCmd{"exec", "execute process and print elapsed time", Chronometer.exec},
+	{"start", "start named timer", Chronometer.start},
+	{"read", "read timer (elapsed time)", Chronometer.read},
+	{"stop", "read and then clear timer", Chronometer.stop},
+	{"list", "list timers", Chronometer.list},
+	{"clear", "clear timer, name empty = uninstall", Chronometer.clear},
+	{"exec", "execute task and print elapsed time", Chronometer.exec},
 }
 
 // Note: defining flags in init() to avoid "panic: flag redefined"
@@ -42,6 +45,7 @@ func init() {
 
 func main() {
 	log.SetFlags(0)
+	flag.Usage = customUsage
 	flag.Parse()
 
 	if showVersion {
@@ -54,23 +58,20 @@ func main() {
 // Note: if flag not specified in first position, it will be ignored.
 // Example: ./timer start azerty -C ls --> flag '-C' will be ignored
 func processArgs(cmd string, name string) {
-	setCustomUsage()
 	checkParameters(cmd, name)
 	executeTimerFunc(cmd, name)
 }
 
-// Redefines flag.Usage() function.
-func setCustomUsage() {
-	tpl, _ := template.New("usage").Parse(`{{range .}}  {{.CmdName}}: {{.CmdDesc}}
-{{end}}`)
-	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [option] command name\n", os.Args[0])
-		fmt.Fprint(os.Stderr, "\n COMMANDS:\n")
-		tpl.Execute(os.Stderr, cmdList)
-		fmt.Fprint(os.Stderr, "\n OPTIONS:\n")
-		flag.PrintDefaults()
-		os.Exit(1)
-	}
+// Returns a custom flag.Usage() function.
+func customUsage() {
+	fmt.Fprintf(os.Stderr, "Usage: %s [OPTION] exec task\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "       %s [OPTION] COMMAND timer-name\n", os.Args[0])
+	fmt.Fprint(os.Stderr, "\n COMMANDS:\n")
+	tpl, _ := template.New("usage").Parse(USAGE_TEMPLATE)
+	tpl.Execute(os.Stderr, cmdList)
+	fmt.Fprint(os.Stderr, "\n OPTIONS:\n")
+	flag.PrintDefaults()
+	os.Exit(1)
 }
 
 // Verifies command line parameters.
@@ -79,11 +80,11 @@ func checkParameters(cmd string, name string) {
 		flag.Usage()
 	}
 	if (cmd == "start" || cmd == "read" || cmd == "stop") && name == "" {
-		fmt.Fprint(os.Stderr, "Please specify the name of a timer.\n")
+		fmt.Fprint(os.Stderr, "Please specify the name of the timer.\n")
 		os.Exit(1)
 	}
 	if cmd == "exec" && name == "" {
-		fmt.Fprint(os.Stderr, "Please specify a process to execute.\n")
+		fmt.Fprint(os.Stderr, "Please specify a task to execute.\n")
 		os.Exit(1)
 	}
 }
