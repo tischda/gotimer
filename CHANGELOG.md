@@ -1,10 +1,11 @@
 ## Changelog
 
-##### gotimer 1.3.0 - (? November 2021)
+##### gotimer 1.3.0 - (23 November 2021)
 
     * Improve usage output
-    * Fix accessing registry keys when not existent (list, clear)
+    * Fix accessing non existent registry keys (list, clear)
     * Read all timers when no name is specified
+    * Do not exit on task execution failure
  
 ##### gotimer 1.2.0 - (14 July 2015)
 
