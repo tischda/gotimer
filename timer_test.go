@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/tischda/gotimer/registry"
 	"io/ioutil"
 	"os"
 	"regexp"
+	"strconv"
 	"testing"
 	"time"
-	"strconv"
+
+	"github.com/tischda/gotimer/registry"
 )
 
 var sut Timer
@@ -31,8 +32,8 @@ func TestStop(t *testing.T) {
 	sut.start("t2")
 	time.Sleep(10 * time.Millisecond)
 	actual := sut.getDuration("t2")
-	if actual < 9*time.Millisecond || actual > 14*time.Millisecond {
-		t.Errorf("Expected: 10 msec, was: %q", actual)
+	if actual < 9*time.Millisecond || actual > 18*time.Millisecond {
+		t.Errorf("Expected: ~10 msec, was: %q", actual)
 	}
 }
 
