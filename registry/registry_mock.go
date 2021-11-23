@@ -32,10 +32,10 @@ func (r MockRegistry) DeleteKey(path RegPath) error {
 	return nil
 }
 
-func (r MockRegistry) EnumValues(path RegPath) []string {
+func (r MockRegistry) EnumValues(path RegPath) ([]string, error) {
 	keys := make([]string, 0, len(r.Timers))
 	for k := range r.Timers {
 		keys = append(keys, k)
 	}
-	return keys
+	return keys, nil
 }

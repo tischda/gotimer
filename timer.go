@@ -2,17 +2,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/tischda/gotimer/registry"
 	"log"
 	"os"
 	"os/exec"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/tischda/gotimer/registry"
 )
 
-var PATH_SOFTWARE = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer`}
-var PATH_TIMERS = registry.RegPath{registry.HKEY_CURRENT_USER, `SOFTWARE\Tischer\timers`}
+var PATH_SOFTWARE = registry.RegPath{HKeyIdx: registry.HKEY_CURRENT_USER, LpSubKey: `SOFTWARE\Tischer`}
+var PATH_TIMERS = registry.RegPath{HKeyIdx: registry.HKEY_CURRENT_USER, LpSubKey: `SOFTWARE\Tischer\timers`}
 
 // Timer records time stamps in a registry
 type Timer struct {
@@ -31,9 +32,9 @@ type Chronometer interface {
 // Starts the specified timer by creating a registry key containing
 // the number of nanoseconds elapsed since January 1, 1970 UTC (int64).
 func (t *Timer) start(name string) {
-	checkFatal(t.registry.CreateKey(PATH_TIMERS))
+	exitOnError(t.registry.CreateKey(PATH_TIMERS))
 	// conversion int64 -> uint64 ok (nanos > 0)
-	checkFatal(t.registry.SetQword(PATH_TIMERS, name, uint64(time.Now().UnixNano())))
+	exitOnError(t.registry.SetQword(PATH_TIMERS, name, uint64(time.Now().UnixNano())))
 }
 
 // Prints the time elapsed and removes the timer entry.
@@ -51,17 +52,17 @@ func (t *Timer) read(name string) {
 // If none specified, clears all timers.
 func (t *Timer) clear(name string) {
 	if name != "" {
-		checkFatal(t.registry.DeleteValue(PATH_TIMERS, name))
+		exitOnError(t.registry.DeleteValue(PATH_TIMERS, name))
 	} else {
-		checkFatal(t.registry.DeleteKey(PATH_TIMERS))
-		checkFatal(t.registry.DeleteKey(PATH_SOFTWARE))
+		// don't check errors, keys might not even exist. Try best effort.
+		t.registry.DeleteKey(PATH_TIMERS)
+		t.registry.DeleteKey(PATH_SOFTWARE)
 	}
 }
 
 // Lists all started timers.
 func (t *Timer) list(name string) {
-	timers := t.registry.EnumValues(PATH_TIMERS)
-	if len(timers) > 0 {
+	if timers, err := t.registry.EnumValues(PATH_TIMERS); err == nil && len(timers) > 0 {
 		sort.Strings(timers)
 		fmt.Println(timers)
 	} else {
@@ -79,7 +80,7 @@ func (t *Timer) exec(process string) {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
-	checkFatal(cmd.Run())
+	exitOnError(cmd.Run())
 }
 
 // Reads the timestamp recorded in the registry for this timer and
@@ -87,7 +88,7 @@ func (t *Timer) exec(process string) {
 func (t *Timer) getDuration(name string) time.Duration {
 	t1 := time.Now()
 	nanos, err := t.registry.GetQword(PATH_TIMERS, name)
-	checkFatal(err)
+	exitOnError(err)
 	// conversion uint64 -> int64 ok, since original value was int64
 	t0 := time.Unix(0, int64(nanos))
 	return t1.Sub(t0)
@@ -102,7 +103,7 @@ func whenDone() func(format string, args ...interface{}) {
 }
 
 // Prints error and exit if err != nil
-func checkFatal(err error) {
+func exitOnError(err error) {
 	if err != nil {
 		message := err.Error()
 		if strings.Contains(message, "The system cannot find the file specified.") {

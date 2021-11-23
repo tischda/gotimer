@@ -26,5 +26,5 @@ type Registry interface {
 	DeleteValue(path RegPath, valueName string) error
 	CreateKey(path RegPath) error
 	DeleteKey(path RegPath) error
-	EnumValues(ath RegPath) []string
+	EnumValues(ath RegPath) ([]string, error)
 }
