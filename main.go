@@ -32,7 +32,7 @@ var cmdList = []cliCmd{
 	{"read", "read timer (elapsed time)", Chronometer.read},
 	{"stop", "read and then clear timer", Chronometer.stop},
 	{"list", "list timers", Chronometer.list},
-	{"clear", "clear timer, name empty = uninstall", Chronometer.clear},
+	{"clear", "clear named timer, remove from registry", Chronometer.clear},
 	{"exec", "execute task and print elapsed time", Chronometer.exec},
 }
 
@@ -48,8 +48,8 @@ func main() {
 	flag.Usage = customUsage
 	flag.Parse()
 
-	if showVersion {
-		fmt.Println("gotimer version", version)
+	if flag.Arg(0) == "version" || showVersion {
+		fmt.Printf("gotimer %s - Measures time between two events\n", version)
 	} else {
 		processArgs(flag.Arg(0), flag.Arg(1))
 	}
@@ -79,7 +79,7 @@ func checkParameters(cmd string, name string) {
 	if flag.NArg() == 0 || flag.NArg() > 2 {
 		flag.Usage()
 	}
-	if (cmd == "start" || cmd == "read" || cmd == "stop") && name == "" {
+	if (cmd == "start" || cmd == "stop") && name == "" {
 		fmt.Fprint(os.Stderr, "Please specify the name of the timer.\n")
 		os.Exit(1)
 	}

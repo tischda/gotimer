@@ -28,7 +28,7 @@ Usage: gotimer [OPTION] exec task
   read: read timer (elapsed time)
   stop: read and then clear timer
   list: list timers
-  clear: clear timer, name empty = uninstall
+  clear: clear named timer, remove from registry
   exec: execute task and print elapsed time
 
  OPTIONS:

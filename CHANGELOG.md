@@ -1,9 +1,10 @@
 ## Changelog
 
-##### gotimer 1.2.1 - (? November 2021)
+##### gotimer 1.3.0 - (? November 2021)
 
     * Improve usage output
     * Fix accessing registry keys when not existent (list, clear)
+    * Read all timers when no name is specified
  
 ##### gotimer 1.2.0 - (14 July 2015)
 

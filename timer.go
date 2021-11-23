@@ -45,7 +45,22 @@ func (t *Timer) stop(name string) {
 
 // Prints the time elapsed since the timer record was created in the registry.
 func (t *Timer) read(name string) {
-	fmt.Printf("Elapsed time (%s): %s\n", name, t.getDuration(name).String())
+	var values []string
+	if name != "" {
+		values = append(values, name)
+	} else {
+		if timers, err := t.registry.EnumValues(PATH_TIMERS); err == nil && len(timers) > 0 {
+			sort.Strings(timers)
+			values = timers
+		}
+	}
+	if len(values) > 0 {
+		for _, v := range values {
+			fmt.Printf("Elapsed time (%s): %s\n", v, t.getDuration(v).String())
+		}
+	} else {
+		fmt.Println("No timers.")
+	}
 }
 
 // Removes the timer entry from the registry.
@@ -105,11 +120,8 @@ func whenDone() func(format string, args ...interface{}) {
 // Prints error and exit if err != nil
 func exitOnError(err error) {
 	if err != nil {
-		message := err.Error()
-		if strings.Contains(message, "The system cannot find the file specified.") {
-			log.Fatal("The system cannot find the timer specified.")
-		} else {
-			log.Fatalln(err)
-		}
+		// Windows return funny error messages when accessing the registry
+		// eg. "The system cannot find the file specified." meaning the key
+		log.Fatalln(strings.Replace(err.Error(), "file", "timer", -1))
 	}
 }
