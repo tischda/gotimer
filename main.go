@@ -62,7 +62,7 @@ func processArgs(cmd string, name string) {
 	executeTimerFunc(cmd, name)
 }
 
-// Returns a custom flag.Usage() function.
+// Custom flag.Usage() function.
 func customUsage() {
 	fmt.Fprintf(os.Stderr, "Usage: %s [OPTION] exec task\n", os.Args[0])
 	fmt.Fprintf(os.Stderr, "       %s [OPTION] COMMAND timer-name\n", os.Args[0])
