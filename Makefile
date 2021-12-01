@@ -1,8 +1,10 @@
 # ---------------------------------------------------------------------------
 # Makefile for CLI utilities
+# 
+# Escape '#' and '[' characters with '\', and '$' characters with '$$'
 # ---------------------------------------------------------------------------
 
-BUILD_TAG=$(shell git describe --tags 2>/dev/null || echo undefined)
+BUILD_TAG=$(shell git describe --tags 2>/dev/null || echo unreleased)
 LDFLAGS=-ldflags=all="-X main.version=${BUILD_TAG} -s -w"
 
 all: build
@@ -30,10 +32,11 @@ snapshot:
 	goreleaser --snapshot --skip-publish --rm-dist
 
 release: 
-	goreleaser release --rm-dist
-
-dist: clean build
-	upx -9 *.exe
+	@sed '1,/\#\# \[${BUILD_TAG}/d;/^\#\# /Q' CHANGELOG.md > releaseinfo
+	goreleaser release --rm-dist --release-notes=releaseinfo
+	@rm -f releaseinfo
 
 clean:
 	go clean
+	rm -f releaseinfo
+	rm -rf dist
