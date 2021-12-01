@@ -16,19 +16,18 @@ init:
 install:
   - go version
   - go env
-  - mkdir %GOPATH%
   - go install github.com/tischda/go2xunit@latest
   - go get -d github.com/tischda/gotimer/registry
 
 build_script:
   - for /f "delims=" %%a in ('git describe --tags') do @set version=%%a
   - ps: Update-AppveyorBuild -Version $env:version
-  - go build -ldflags "all=-X main.version=%version% -s"
+  - go build -mod vendor -ldflags=all="-X main.version=%version% -s -w"
 
 test_script:
   - gotimer.exe -version
   - go test -v -cover
-  - go test -v | go2xunit -xunitnet > xunit-report.xml
+  - go test -v | go2xunit.exe -xunitnet > xunit-report.xml
   - gotimer.exe start t1
   - gotimer.exe read t1
   - gotimer.exe start t2
