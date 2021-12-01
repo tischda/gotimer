@@ -17,8 +17,8 @@ install:
   - go version
   - go env
   - mkdir %GOPATH%
-  - go install github.com/tischda/go2xunit
-  - go install github.com/tischda/gotimer/registry
+  - go install github.com/tischda/go2xunit@latest
+  - go get -d github.com/tischda/gotimer/registry
 
 build_script:
   - for /f "delims=" %%a in ('git describe --tags') do @set version=%%a
