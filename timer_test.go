@@ -32,7 +32,8 @@ func TestStop(t *testing.T) {
 	sut.start("t2")
 	time.Sleep(10 * time.Millisecond)
 	actual := sut.getDuration("t2")
-	if actual < 9*time.Millisecond || actual > 18*time.Millisecond {
+	// This fails quite often in AppVeyor...
+	if actual < 9*time.Millisecond || actual > 20*time.Millisecond {
 		t.Errorf("Expected: ~10 msec, was: %q", actual)
 	}
 }
