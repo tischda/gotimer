@@ -1,4 +1,4 @@
-gotimer
-gotimer.exe
-releaseinfo
+*.exe
+coverage.out
 dist/
+releaseinfo

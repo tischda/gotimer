@@ -16,7 +16,7 @@ init:
 install:
   - go version
   - go env
-  - go install github.com/tischda/go2xunit@latest
+  - go install github.com/tebeka/go2xunit@latest
   - go get -d github.com/tischda/gotimer/registry
 
 build_script:
